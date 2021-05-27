@@ -6,7 +6,17 @@ class MainScreenNavigator extends StatelessWidget {
   Widget build(BuildContext context) {
     int _focusedPageIndex = 3;
     return Container(
-      color: Constant.primaryColor,
+      decoration: BoxDecoration(
+        color: Constant.primaryColor,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade900,
+            offset: Offset(0, 1),
+            blurRadius: 0.3,
+            spreadRadius: 0.3,
+          ),
+        ],
+      ),
       child: Row(
         children: [
           Expanded(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 import 'package:whatsapp_clone_mobile/widgets/main_screen/main_screen_navigator.dart';
 import 'package:whatsapp_clone_mobile/widgets/main_screen/recent_calls.dart';
@@ -51,7 +52,17 @@ class _MainScreenState extends State<MainScreen> {
           IconButton(
             icon: Icon(Icons.more_vert),
             splashRadius: 20,
-            onPressed: (){},
+            onPressed: (){
+              showMenu(
+                context: context,
+                position: RelativeRect.fromLTRB(100, 0, 0, 10),
+                items: [
+                  PopupMenuItem(
+                    child: Text('1'),
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),
