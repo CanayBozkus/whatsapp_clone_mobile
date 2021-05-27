@@ -1,10 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
+import 'package:whatsapp_clone_mobile/widgets/main_screen/main_screen_navigator.dart';
+import 'package:whatsapp_clone_mobile/widgets/main_screen/recent_calls.dart';
+import 'package:whatsapp_clone_mobile/widgets/main_screen/recent_chats.dart';
+import 'package:whatsapp_clone_mobile/widgets/main_screen/recent_statuses.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   static const routeName = 'MainScreen';
   const MainScreen({Key key}) : super(key: key);
 
+  @override
+  _MainScreenState createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  PageController _pageController;
+
+  @override
+  void initState() {
+    _pageController = PageController(
+      initialPage: 1,
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,25 +57,20 @@ class MainScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Container(
-            color: Constant.primaryColor,
-            child: Row(
+          MainScreenNavigator(),
+          Expanded(
+            child: PageView(
+              controller: _pageController,
               children: [
-                Icon(
-                  Icons.photo_camera_rounded,
+                Container(
+                  child: Text('camera'),
                 ),
-                Text(
-                  'CHATS',
-                ),
-                Text(
-                  'STATUS',
-                ),
-                Text(
-                  'CALLS'
-                )
+                RecentChats(),
+                RecentStatuses(),
+                RecentCalls(),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
