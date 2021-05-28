@@ -5,7 +5,8 @@ import 'package:whatsapp_clone_mobile/widgets/main_screen/main_screen_navigator.
 import 'package:whatsapp_clone_mobile/widgets/main_screen/recent_calls.dart';
 import 'package:whatsapp_clone_mobile/widgets/main_screen/recent_chats.dart';
 import 'package:whatsapp_clone_mobile/widgets/main_screen/recent_statuses.dart';
-
+import 'package:provider/provider.dart';
+import 'package:whatsapp_clone_mobile/utilities/general_provider.dart';
 class MainScreen extends StatefulWidget {
   static const routeName = 'MainScreen';
   const MainScreen({Key key}) : super(key: key);
@@ -16,7 +17,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   PageController _pageController;
-
+  int _currentPageIndex;
   @override
   void initState() {
     _pageController = PageController(
@@ -32,6 +33,7 @@ class _MainScreenState extends State<MainScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    _currentPageIndex = context.watch<GeneralProvider>().mainScreenIndex;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Constant.primaryColor,
@@ -77,10 +79,15 @@ class _MainScreenState extends State<MainScreen> {
       ),
       body: Column(
         children: [
-          MainScreenNavigator(),
+          MainScreenNavigator(controller: _pageController,),
           Expanded(
             child: PageView(
               controller: _pageController,
+              onPageChanged: (int index){
+                if(!context.read<GeneralProvider>().mainScreenNavigatorClicked){
+                  context.read<GeneralProvider>().mainScreenIndex = index;
+                }
+              },
               children: [
                 Container(
                   child: Text('camera'),

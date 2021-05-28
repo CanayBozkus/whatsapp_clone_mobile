@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
+import 'package:provider/provider.dart';
+import 'package:whatsapp_clone_mobile/utilities/general_provider.dart';
 
 class MainScreenNavigator extends StatelessWidget {
+  MainScreenNavigator({@required this.controller});
+
+  Future<void> moveMainScreen(BuildContext context, int index) async {
+    context.read<GeneralProvider>().mainScreenNavigatorClicked = true;
+    context.read<GeneralProvider>().mainScreenIndex = index;
+    await controller.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+    context.read<GeneralProvider>().mainScreenNavigatorClicked = false;
+  }
+
+  final PageController controller;
   @override
   Widget build(BuildContext context) {
-    int _focusedPageIndex = 3;
+    int _focusedPageIndex = context.watch<GeneralProvider>().mainScreenIndex;
     return Container(
       decoration: BoxDecoration(
         color: Constant.primaryColor,
@@ -23,7 +35,9 @@ class MainScreenNavigator extends StatelessWidget {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: (){},
+                onTap: () async {
+                  await moveMainScreen(context, 0);
+                },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 8),
                   child: Icon(
@@ -40,7 +54,9 @@ class MainScreenNavigator extends StatelessWidget {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: (){},
+                onTap: () async {
+                  await moveMainScreen(context, 1);
+                },
                 child: Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(vertical: 8),
@@ -80,7 +96,9 @@ class MainScreenNavigator extends StatelessWidget {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: (){},
+                onTap: () async {
+                  await moveMainScreen(context, 2);
+                },
                 child: Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(vertical: 8),
@@ -104,7 +122,9 @@ class MainScreenNavigator extends StatelessWidget {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: (){},
+                onTap: () async {
+                  await moveMainScreen(context, 3);
+                },
                 child: Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(vertical: 8),
