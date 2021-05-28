@@ -40,7 +40,7 @@ class BaseTextFormField extends StatelessWidget {
         ),
         fillColor: theme.primaryColor,
         filled: true,
-        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: suffixIcon != Null ? 0 : 15),
+        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: suffixIcon != null ? 0 : 15),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
           borderSide: BorderSide(
