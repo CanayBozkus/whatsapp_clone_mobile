@@ -19,5 +19,10 @@ class Constant{
       fontSize: 20,
       fontWeight: FontWeight.w600
   );
+
+  static const popupMenuTextStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 16,
+  );
 }
 

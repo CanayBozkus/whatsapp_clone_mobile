@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone_mobile/route_generator.dart';
+import 'package:whatsapp_clone_mobile/screens/chat_detail_screen.dart';
 import 'package:whatsapp_clone_mobile/screens/chat_screen.dart';
 import 'package:whatsapp_clone_mobile/screens/login_screen.dart';
 import 'package:whatsapp_clone_mobile/screens/main_screen.dart';
@@ -21,6 +22,7 @@ class RouteGenerator {
       case RegistrationScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(RegistrationScreen()));
       case MainScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(MainScreen()));
       case ChatScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(ChatScreen()));
+      case ChatDetailScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(ChatDetailScreen()));
       default: return MaterialPageRoute(builder: (_) => Text('error'));
     }
   }

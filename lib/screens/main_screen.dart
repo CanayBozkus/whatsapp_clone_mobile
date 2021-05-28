@@ -55,12 +55,21 @@ class _MainScreenState extends State<MainScreen> {
             onPressed: (){
               showMenu(
                 context: context,
+                color: Constant.primaryColor,
                 position: RelativeRect.fromLTRB(100, 0, 0, 10),
-                items: [
-                  PopupMenuItem(
-                    child: Text('1'),
-                  ),
-                ],
+                items:
+                  ['New group', 'New broadcast', 'WhatsApp Web', 'Starred messages', 'Settings']
+                      .map((e){
+                        return PopupMenuItem(
+                          child: Text(
+                            e,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                        );
+                  }).toList(),
               );
             },
           ),
