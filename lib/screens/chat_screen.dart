@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 import 'package:whatsapp_clone_mobile/widgets/chat_screen/chat_screen_appbar.dart';
 import 'package:whatsapp_clone_mobile/widgets/chat_screen/chat_screen_text_field.dart';
+import 'package:whatsapp_clone_mobile/widgets/chat_screen/message_bubble.dart';
 import 'package:whatsapp_clone_mobile/widgets/form/base_textformfield.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -18,7 +19,12 @@ class ChatScreen extends StatelessWidget {
               ChatScreenAppBar(),
               Expanded(
                 child: ListView(
-                  children: [],
+                  reverse: true,
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  children: [
+                    MessageBubble(),
+                    MessageBubble(isMe: false,)
+                  ],
                 ),
               ),
               Padding(

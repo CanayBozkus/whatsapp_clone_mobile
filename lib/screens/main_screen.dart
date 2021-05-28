@@ -18,6 +18,17 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   PageController _pageController;
   int _currentPageIndex;
+
+  IconData getFloatingActionButtonIcon(){
+    switch(_currentPageIndex){
+      case 0: return Icons.camera_alt;
+      case 1: return Icons.messenger;
+      case 2: return Icons.camera_alt;
+      case 3: return Icons.phone;
+      default: return Icons.close;
+    }
+  }
+
   @override
   void initState() {
     _pageController = PageController(
@@ -35,6 +46,35 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     _currentPageIndex = context.watch<GeneralProvider>().mainScreenIndex;
     return Scaffold(
+      floatingActionButton: _currentPageIndex != 0
+          ?
+      Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          _currentPageIndex == 2
+              ?
+          FloatingActionButton(
+            mini: true,
+            backgroundColor: Constant.primaryColor,
+            child: Icon(
+              Icons.create,
+              size: 22,
+            ),
+            onPressed: (){},
+          )
+              :
+          SizedBox.shrink(),
+          SizedBox(height: 10,),
+          FloatingActionButton(
+            backgroundColor: Constant.primaryColor,
+            child: Icon(getFloatingActionButtonIcon()),
+            onPressed: (){
+
+            },
+          ),
+        ],
+      )
+          : SizedBox.shrink(),
       appBar: AppBar(
         backgroundColor: Constant.primaryColor,
         elevation: 0,
