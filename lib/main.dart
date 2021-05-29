@@ -18,9 +18,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         theme: ThemeData(
-          primaryColor: Constant.primaryColor,
-          accentColor: Constant.accentColor,
-          scaffoldBackgroundColor: Constant.accentColor,
+          scaffoldBackgroundColor: Constant.secondaryColor,
           textTheme: TextTheme(
             bodyText1: TextStyle(
               fontSize: Constant.defaultFontSize,

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:whatsapp_clone_mobile/utilities/constants.dart';
+import 'package:whatsapp_clone_mobile/widgets/button/base_switch_button.dart';
+import 'package:whatsapp_clone_mobile/widgets/chat_detail_screen/chat_detail_settings_container.dart';
+import 'package:whatsapp_clone_mobile/widgets/chat_detail_screen/recent_files_builder.dart';
 
 class ChatDetailScreen extends StatelessWidget {
   static const routeName = 'ChatDetailScreen';
@@ -13,11 +17,48 @@ class ChatDetailScreen extends StatelessWidget {
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled){
             return [
               SliverAppBar(
+                backgroundColor: Constant.primaryColor,
                 expandedHeight: 300,
                 floating: false,
                 pinned: true,
                 actions: [
-                  Icon(Icons.more_vert)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: 40,
+                      child: ClipOval(
+                        child: Material(
+                          color: Colors.transparent,
+                          shape: CircleBorder(),
+                          child: PopupMenuButton(
+                            color: Constant.primaryColor,
+                            icon: Icon(
+                              Icons.more_vert,
+                              color: Colors.white,
+                            ),
+                            onSelected: (value) async {
+                              print(value);
+                            },
+                            itemBuilder: (context) {
+                              final items = [
+                                'Add to contacts',
+                                'Verify security code',
+                              ].map((e) {
+                                return PopupMenuItem(
+                                  child: Text(
+                                    e,
+                                    style: Constant.popupMenuTextStyle,
+                                  ),
+                                  value: e,
+                                );
+                              }).toList();
+                              return items;
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
                 flexibleSpace: LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints){
@@ -50,9 +91,41 @@ class ChatDetailScreen extends StatelessWidget {
               )
             ];
           },
-          body: Column(
+          body: ListView(
+            padding: EdgeInsets.symmetric(vertical: 20),
             children: [
-              Text('Tezt')
+              RecentFilesBuilder(),
+              SizedBox(height: 10,),
+              Container(
+                child: Column(
+                  children: [
+                    ChatDetailSettingsContainer(
+                      action: BaseSwitchButton(),
+                      title: 'Mute notifications',
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 15),
+                      child: Divider(
+                        color: Colors.white70,
+                        height: 0,
+                      ),
+                    ),
+                    ChatDetailSettingsContainer(
+                      title: 'Custom notifications',
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 15),
+                      child: Divider(
+                        color: Colors.white70,
+                        height: 0,
+                      ),
+                    ),
+                    ChatDetailSettingsContainer(
+                      title: 'Media visibility',
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
