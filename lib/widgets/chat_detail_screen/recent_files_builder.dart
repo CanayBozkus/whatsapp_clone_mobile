@@ -29,10 +29,7 @@ class RecentFilesBuilder extends StatelessWidget {
               children: [
                 Text(
                   'Media, links, and docs',
-                  style: TextStyle(
-                    color: Colors.blue[100],
-                    fontSize: 18,
-                  ),
+                  style: Constant.subTitleTextStyle,
                 ),
                 Text(
                   '20 >',

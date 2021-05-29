@@ -26,5 +26,10 @@ class Constant{
     color: Colors.white,
     fontSize: 16,
   );
+  static const subTitleTextStyle = TextStyle(
+      color: Color(0xffbbdeef),
+      fontSize: 18
+  );
+
 }
 

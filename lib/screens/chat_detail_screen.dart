@@ -131,10 +131,7 @@ class ChatDetailScreen extends StatelessWidget {
                       padding: EdgeInsets.only(top: 10, left: 20),
                       child: Text(
                         'Phone Number',
-                        style: TextStyle(
-                          color: Colors.blue[100],
-                          fontSize: 18
-                        ),
+                        style: Constant.subTitleTextStyle,
                       ),
                     ),
                     ChatDetailSettingsContainer(
@@ -175,10 +172,7 @@ class ChatDetailScreen extends StatelessWidget {
                         children: [
                           Text(
                             'Groups in common',
-                            style: TextStyle(
-                                color: Colors.blue[100],
-                                fontSize: 18
-                            ),
+                            style: Constant.subTitleTextStyle,
                           ),
                           Text(
                             '30',

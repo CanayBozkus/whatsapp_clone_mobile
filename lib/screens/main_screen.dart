@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:whatsapp_clone_mobile/screens/contacts_screen.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 import 'package:whatsapp_clone_mobile/widgets/main_screen/main_screen_navigator.dart';
 import 'package:whatsapp_clone_mobile/widgets/main_screen/recent_calls.dart';
@@ -69,7 +70,15 @@ class _MainScreenState extends State<MainScreen> {
             backgroundColor: Constant.primaryColor,
             child: Icon(getFloatingActionButtonIcon()),
             onPressed: (){
+              if(_currentPageIndex == 1){
+                Navigator.pushNamed(context, ContactsScreen.routeName, arguments: false);
+              }
+              else if(_currentPageIndex == 2){
 
+              }
+              else if(_currentPageIndex == 3){
+                Navigator.pushNamed(context, ContactsScreen.routeName, arguments: true);
+              }
             },
           ),
         ],
