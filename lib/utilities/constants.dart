@@ -5,6 +5,7 @@ class Constant{
   static const Color primaryColor = Color(0xff4b005e);
   static const Color lightPrimaryColor = Color(0xff8932a8);
   static const Color secondaryColor = Color(0xff1b0333);
+  static const alertColor = Color(0xffeb1a58);
 
   static const EdgeInsets defaultScreenPadding = EdgeInsets.symmetric(horizontal: 30);
 

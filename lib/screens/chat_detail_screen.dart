@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 import 'package:whatsapp_clone_mobile/widgets/button/base_switch_button.dart';
 import 'package:whatsapp_clone_mobile/widgets/chat_detail_screen/chat_detail_settings_container.dart';
+import 'package:whatsapp_clone_mobile/widgets/chat_detail_screen/group_card.dart';
 import 'package:whatsapp_clone_mobile/widgets/chat_detail_screen/recent_files_builder.dart';
 
 class ChatDetailScreen extends StatelessWidget {
@@ -122,6 +123,103 @@ class ChatDetailScreen extends StatelessWidget {
                     ),
                     ChatDetailSettingsContainer(
                       title: 'Media visibility',
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                      width: double.infinity,
+                      color: Constant.primaryColor,
+                      padding: EdgeInsets.only(top: 10, left: 20),
+                      child: Text(
+                        'Phone Number',
+                        style: TextStyle(
+                          color: Colors.blue[100],
+                          fontSize: 18
+                        ),
+                      ),
+                    ),
+                    ChatDetailSettingsContainer(
+                      title: '555 653 85 37',
+                      action: Material(
+                        color: Colors.transparent,
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.messenger,),
+                              color: Colors.white70,
+                              splashRadius: 20,
+                              onPressed: (){},
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.phone),
+                              color: Colors.white70,
+                              splashRadius: 20,
+                              onPressed: (){},
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.videocam),
+                              color: Colors.white70,
+                              splashRadius: 20,
+                              onPressed: (){},
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                      width: double.infinity,
+                      color: Constant.primaryColor,
+                      padding: EdgeInsets.only(top: 10, left: 20, right: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Groups in common',
+                            style: TextStyle(
+                                color: Colors.blue[100],
+                                fontSize: 18
+                            ),
+                          ),
+                          Text(
+                            '30',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 18
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    GroupCard(),
+                    GroupCard(),
+                    GroupCard(),
+                    ChatDetailSettingsContainer(
+                      title: '20 more',
+                      prefixIcon: Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    ChatDetailSettingsContainer(
+                      title: 'Block',
+                      titleFontColor: Constant.alertColor,
+                      prefixIcon: Icon(
+                        Icons.not_interested,
+                        size: 30,
+                        color: Constant.alertColor,
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    ChatDetailSettingsContainer(
+                      title: 'Report contact',
+                      titleFontColor: Constant.alertColor,
+                      prefixIcon: Icon(
+                        Icons.thumb_down,
+                        size: 30,
+                        color: Constant.alertColor,
+                      ),
                     ),
                   ],
                 ),

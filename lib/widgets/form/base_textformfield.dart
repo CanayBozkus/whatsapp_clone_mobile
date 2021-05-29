@@ -19,7 +19,6 @@ class BaseTextFormField extends StatelessWidget {
   final int maxLine;
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
     return TextFormField(
       maxLines: maxLine,
       minLines: minLine,
@@ -38,7 +37,7 @@ class BaseTextFormField extends StatelessWidget {
           letterSpacing: 0.75,
           fontStyle: FontStyle.italic,
         ),
-        fillColor: theme.primaryColor,
+        fillColor: Constant.primaryColor,
         filled: true,
         contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: suffixIcon != null ? 0 : 15),
         enabledBorder: OutlineInputBorder(
