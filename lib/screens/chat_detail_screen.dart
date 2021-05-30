@@ -4,6 +4,7 @@ import 'package:whatsapp_clone_mobile/widgets/button/base_switch_button.dart';
 import 'package:whatsapp_clone_mobile/widgets/chat_detail_screen/chat_detail_settings_container.dart';
 import 'package:whatsapp_clone_mobile/widgets/chat_detail_screen/group_card.dart';
 import 'package:whatsapp_clone_mobile/widgets/chat_detail_screen/recent_files_builder.dart';
+import 'package:whatsapp_clone_mobile/widgets/general/base_card.dart';
 
 class ChatDetailScreen extends StatelessWidget {
   static const routeName = 'ChatDetailScreen';
@@ -85,7 +86,10 @@ class ChatDetailScreen extends StatelessWidget {
                         ),
                       ),
                       titlePadding: EdgeInsets.symmetric(horizontal: 60 - constraints.biggest.height/10),
-                      background: Image.asset('assets/images/avatar.png', fit: BoxFit.cover,),
+                      background: Hero(
+                        tag: 'profile_image',
+                        child: Image.asset('assets/images/avatar.png', fit: BoxFit.cover,),
+                      ),
                     );
                   },
                 ),
@@ -100,9 +104,10 @@ class ChatDetailScreen extends StatelessWidget {
               Container(
                 child: Column(
                   children: [
-                    ChatDetailSettingsContainer(
-                      action: BaseSwitchButton(),
+                    BaseCard(
                       title: 'Mute notifications',
+                      trailing: BaseSwitchButton(),
+                      backgroundColor: Constant.primaryColor,
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 15),
@@ -111,8 +116,9 @@ class ChatDetailScreen extends StatelessWidget {
                         height: 0,
                       ),
                     ),
-                    ChatDetailSettingsContainer(
+                    BaseCard(
                       title: 'Custom notifications',
+                      backgroundColor: Constant.primaryColor,
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 15),
@@ -121,8 +127,9 @@ class ChatDetailScreen extends StatelessWidget {
                         height: 0,
                       ),
                     ),
-                    ChatDetailSettingsContainer(
+                    BaseCard(
                       title: 'Media visibility',
+                      backgroundColor: Constant.primaryColor,
                     ),
                     SizedBox(height: 20,),
                     Container(
@@ -134,9 +141,9 @@ class ChatDetailScreen extends StatelessWidget {
                         style: Constant.subTitleTextStyle,
                       ),
                     ),
-                    ChatDetailSettingsContainer(
+                    BaseCard(
                       title: '555 653 85 37',
-                      action: Material(
+                      trailing: Material(
                         color: Colors.transparent,
                         child: Row(
                           children: [
@@ -161,6 +168,7 @@ class ChatDetailScreen extends StatelessWidget {
                           ],
                         ),
                       ),
+                      backgroundColor: Constant.primaryColor,
                     ),
                     SizedBox(height: 20,),
                     Container(
@@ -184,16 +192,50 @@ class ChatDetailScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    GroupCard(),
-                    GroupCard(),
-                    GroupCard(),
-                    ChatDetailSettingsContainer(
+                    BaseCard(
+                      showAvatar: true,
+                      title: 'Whatsapp Group',
+                      subTitle: 'ali, ayşe fatma',
+                      backgroundColor: Constant.primaryColor,
+                      onTap: (){},
+                    ),
+                    BaseCard(
+                      showAvatar: true,
+                      title: 'Whatsapp Group',
+                      subTitle: 'ali, ayşe fatma',
+                      backgroundColor: Constant.primaryColor,
+                      onTap: (){},
+                    ),
+                    BaseCard(
+                      showAvatar: true,
+                      title: 'Whatsapp Group',
+                      subTitle: 'ali, ayşe fatma',
+                      backgroundColor: Constant.primaryColor,
+                      onTap: (){},
+                    ),
+                    BaseCard(
+                      showAvatar: true,
+                      title: 'Whatsapp Group',
+                      subTitle: 'ali, ayşe fatma',
+                      backgroundColor: Constant.primaryColor,
+                      onTap: (){},
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 90),
+                      child: Divider(
+                        color: Colors.white70,
+                        height: 0,
+                      ),
+                    ),
+                    BaseCard(
                       title: '20 more',
+                      showPrefixIcon: true,
                       prefixIcon: Icon(
                         Icons.keyboard_arrow_down,
                         color: Colors.white,
                         size: 30,
                       ),
+                      backgroundColor: Constant.primaryColor,
                     ),
                     SizedBox(height: 20,),
                     ChatDetailSettingsContainer(

@@ -47,7 +47,10 @@ class ChatScreenAppBar extends StatelessWidget {
                     CircleAvatar(
                       radius: 20,
                       child: ClipOval(
-                        child: Image.asset('assets/images/avatar.png'),
+                        child: Hero(
+                          tag: 'profile_image',
+                          child: Image.asset('assets/images/avatar.png'),
+                        ),
                       ),
                     ),
                   ],

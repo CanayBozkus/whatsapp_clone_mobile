@@ -26,7 +26,7 @@ class RouteGenerator {
       case ChatScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(ChatScreen()));
       case ChatDetailScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(ChatDetailScreen()));
       case ContactsScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(ContactsScreen(isCallScreen: args,)));
-      case SettingsScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(SettingsScreen()));
+      case SettingsScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(SettingsScreen(body: args,)));
       default: return MaterialPageRoute(builder: (_) => Text('error'));
     }
   }

@@ -117,7 +117,7 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     onSelected: (MainScreenDropdown dropdown) async {
                       switch(dropdown){
-                        case MainScreenDropdown.settings: return Navigator.pushNamed(context, SettingsScreen.routeName);
+                        case MainScreenDropdown.settings: return Navigator.pushNamed(context, SettingsScreen.routeName, arguments: SettingScreenBody.generalSettings);
                         default: return null;
                       }
                     },

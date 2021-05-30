@@ -48,3 +48,8 @@ enum MainScreenDropdown {
   settings
 }
 
+enum SettingScreenBody {
+  generalSettings,
+  profile,
+}
+
