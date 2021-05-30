@@ -36,6 +36,7 @@ class _MainScreenState extends State<MainScreen> {
     _pageController = PageController(
       initialPage: 1,
     );
+    context.read<GeneralProvider>().initialize();
     super.initState();
   }
 

@@ -2,6 +2,7 @@
     package="com.example.whatsapp_clone_mobile">
    <application
         android:label="whatsapp_clone_mobile"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

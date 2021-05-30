@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 class Constant{
 
+  static const serverURI = '10.0.2.2:3000';
+
   static const Color primaryColor = Color(0xff4b005e);
   static const Color lightPrimaryColor = Color(0xff8932a8);
   static const Color secondaryColor = Color(0xff1b0333);
