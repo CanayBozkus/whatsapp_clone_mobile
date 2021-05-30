@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 import 'package:whatsapp_clone_mobile/widgets/main_screen/recent_chat_card.dart';
 
 class RecentChats extends StatelessWidget {

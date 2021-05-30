@@ -31,5 +31,20 @@ class Constant{
       fontSize: 18
   );
 
+  static const mainScreenDropdownNames = {
+    MainScreenDropdown.newBroadcast: 'New broadcast',
+    MainScreenDropdown.newGroup: 'New group',
+    MainScreenDropdown.whatsAppWeb: 'WhatsApp Web',
+    MainScreenDropdown.starredMessages: 'Starred messages',
+    MainScreenDropdown.settings: 'Settings',
+  };
+}
+
+enum MainScreenDropdown {
+  newGroup,
+  newBroadcast,
+  whatsAppWeb,
+  starredMessages,
+  settings
 }
 

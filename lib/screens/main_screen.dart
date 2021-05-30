@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:whatsapp_clone_mobile/screens/contacts_screen.dart';
+import 'package:whatsapp_clone_mobile/screens/settings_screen.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 import 'package:whatsapp_clone_mobile/widgets/main_screen/main_screen_navigator.dart';
 import 'package:whatsapp_clone_mobile/widgets/main_screen/recent_calls.dart';
@@ -100,29 +101,41 @@ class _MainScreenState extends State<MainScreen> {
             splashRadius: 20,
             onPressed: (){},
           ),
-          IconButton(
-            icon: Icon(Icons.more_vert),
-            splashRadius: 20,
-            onPressed: (){
-              showMenu(
-                context: context,
-                color: Constant.primaryColor,
-                position: RelativeRect.fromLTRB(100, 0, 0, 10),
-                items:
-                  ['New group', 'New broadcast', 'WhatsApp Web', 'Starred messages', 'Settings']
-                      .map((e){
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: SizedBox(
+              width: 40,
+              child: ClipOval(
+                child: Material(
+                  color: Colors.transparent,
+                  shape: CircleBorder(),
+                  child: PopupMenuButton(
+                    color: Constant.primaryColor,
+                    icon: Icon(
+                      Icons.more_vert,
+                      color: Colors.white,
+                    ),
+                    onSelected: (MainScreenDropdown dropdown) async {
+                      switch(dropdown){
+                        case MainScreenDropdown.settings: return Navigator.pushNamed(context, SettingsScreen.routeName);
+                        default: return null;
+                      }
+                    },
+                    itemBuilder: (context) {
+                      return MainScreenDropdown.values.map((dropdownValue) {
                         return PopupMenuItem(
                           child: Text(
-                            e,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
+                            Constant.mainScreenDropdownNames[dropdownValue],
+                            style: Constant.popupMenuTextStyle,
                           ),
+                          value: dropdownValue,
                         );
-                  }).toList(),
-              );
-            },
+                      }).toList();
+                    },
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),

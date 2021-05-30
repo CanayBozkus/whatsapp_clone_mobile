@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
-import 'package:whatsapp_clone_mobile/widgets/contacts_screen/contact_screen_card.dart';
+import 'package:whatsapp_clone_mobile/widgets/general/base_card.dart';
 
 class ContactsScreen extends StatelessWidget {
   static const routeName = 'ContactsScreen';
@@ -74,9 +74,9 @@ class ContactsScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          ContactScreenCard(
-            mainText: isCallScreen ?'New group call' : 'New group',
-            isCallCard: false,
+          BaseCard(
+            title: isCallScreen ?'New group call' : 'New group',
+            showPrefixIcon: true,
             prefixIcon: Container(
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
@@ -89,15 +89,16 @@ class ContactsScreen extends StatelessWidget {
                 size: 34,
               ),
             ),
+            onTap: (){},
           ),
-          ContactScreenCard(
-            mainText: 'New contact',
-            isCallCard: false,
+          BaseCard(
+            title: 'New contact',
+            showPrefixIcon: true,
             prefixIcon: Container(
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Constant.primaryColor
+                  shape: BoxShape.circle,
+                  color: Constant.primaryColor
               ),
               child: Icon(
                 Icons.person_add,
@@ -105,36 +106,86 @@ class ContactsScreen extends StatelessWidget {
                 size: 34,
               ),
             ),
+            onTap: (){},
           ),
 
-          ContactScreenCard(
-            mainText: 'Canay Bozkuş',
-            subText: 'Nillius in verba',
-            isCallCard: isCallScreen,
+          BaseCard(
+            title: 'Canay Bozkuş',
+            subTitle: 'Nillius in verba',
+            showAvatar: true,
+            onTap: (){},
+            trailing: isCallScreen
+                ?
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.phone),
+                  color: Constant.primaryColor,
+                  iconSize: 28,
+                  splashRadius: 22,
+                  onPressed: (){},
+                ),
+                IconButton(
+                  icon: Icon(Icons.videocam),
+                  color: Constant.primaryColor,
+                  iconSize: 28,
+                  splashRadius: 22,
+                  onPressed: (){},
+                ),
+              ],
+            )
+                :
+            SizedBox.shrink(),
           ),
-          ContactScreenCard(
-            mainText: 'Canay Bozkuş',
-            isCallCard: isCallScreen,
+          BaseCard(
+            title: 'Canay Bozkuş',
+            showAvatar: true,
+            onTap: (){},
+            trailing: isCallScreen
+                ?
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.phone),
+                  color: Constant.primaryColor,
+                  iconSize: 28,
+                  splashRadius: 22,
+                  onPressed: (){},
+                ),
+                IconButton(
+                  icon: Icon(Icons.videocam),
+                  color: Constant.primaryColor,
+                  iconSize: 28,
+                  splashRadius: 22,
+                  onPressed: (){},
+                ),
+              ],
+            )
+                :
+            SizedBox.shrink(),
           ),
 
-          ContactScreenCard(
-            mainText: 'Invite friends',
-            isCallCard: false,
+          BaseCard(
+            title: 'Invite friends',
+            showPrefixIcon: true,
             prefixIcon: Icon(
               Icons.share,
               color: Colors.white,
               size: 34,
             ),
+            onTap: (){},
           ),
-          ContactScreenCard(
-            mainText: 'Contacts help',
-            isCallCard: false,
+          BaseCard(
+            title: 'Contacts help',
+            showPrefixIcon: true,
             prefixIcon: Icon(
               Icons.help,
               color: Colors.white,
               size: 34,
             ),
+            onTap: (){},
           ),
+
         ],
       ),
     );

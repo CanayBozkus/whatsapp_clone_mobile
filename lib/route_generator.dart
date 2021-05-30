@@ -6,6 +6,7 @@ import 'package:whatsapp_clone_mobile/screens/contacts_screen.dart';
 import 'package:whatsapp_clone_mobile/screens/login_screen.dart';
 import 'package:whatsapp_clone_mobile/screens/main_screen.dart';
 import 'package:whatsapp_clone_mobile/screens/registration_screen.dart';
+import 'package:whatsapp_clone_mobile/screens/settings_screen.dart';
 import 'package:whatsapp_clone_mobile/widgets/general/unfocus_textfield_widget.dart';
 
 class RouteGenerator {
@@ -25,6 +26,7 @@ class RouteGenerator {
       case ChatScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(ChatScreen()));
       case ChatDetailScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(ChatDetailScreen()));
       case ContactsScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(ContactsScreen(isCallScreen: args,)));
+      case SettingsScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(SettingsScreen()));
       default: return MaterialPageRoute(builder: (_) => Text('error'));
     }
   }
