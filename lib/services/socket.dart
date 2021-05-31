@@ -1,17 +1,23 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:http/http.dart' as http;
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 
 class SocketIO {
-  IO.Socket _socket = IO.io(
-    'http://${Constant.serverURI}',
+  SocketIO({@required this.jwt}){
+    _socket = IO.io(
+      'http://${Constant.serverURI}',
       IO.OptionBuilder()
           .setTransports(['websocket'])
-          .setExtraHeaders({'Authorization': 'Bearer (token)'})
+          .setExtraHeaders({'Authorization': 'Bearer $jwt'})
           .build(),
-  );
+    );
+  }
+
+  String jwt;
+  IO.Socket _socket;
 
   connect(Function onConnectHandler){
     this._socket.onConnect((_) async {

@@ -40,6 +40,25 @@ class Constant{
     MainScreenDropdown.starredMessages: 'Starred messages',
     MainScreenDropdown.settings: 'Settings',
   };
+
+  static const keyboards = {
+    KeyboardTypes.number: TextInputType.number,
+    KeyboardTypes.text: TextInputType.text,
+    KeyboardTypes.email: TextInputType.emailAddress,
+    KeyboardTypes.phone: TextInputType.phone
+  };
+
+  static const showLastSeenIndexes = {
+    ShowLastSeenTypes.everyone: 0,
+    ShowLastSeenTypes.contacts: 1,
+    ShowLastSeenTypes.nobody: 2
+  };
+
+  static const showLastSeenIndexesReverse = {
+    0: ShowLastSeenTypes.everyone,
+    1: ShowLastSeenTypes.contacts,
+    2: ShowLastSeenTypes.nobody,
+  };
 }
 
 enum MainScreenDropdown {
@@ -53,5 +72,18 @@ enum MainScreenDropdown {
 enum SettingScreenBody {
   generalSettings,
   profile,
+}
+
+enum KeyboardTypes {
+  email,
+  number,
+  text,
+  phone
+}
+
+enum ShowLastSeenTypes {
+  everyone,
+  nobody,
+  contacts,
 }
 

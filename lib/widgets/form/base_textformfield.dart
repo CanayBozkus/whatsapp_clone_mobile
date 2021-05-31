@@ -9,6 +9,10 @@ class BaseTextFormField extends StatelessWidget {
     this.suffixIcon,
     this.minLine = 1,
     this.maxLine = 1,
+    this.onChanged,
+    this.onSaved,
+    this.validator,
+    this.keyboard = KeyboardTypes.text,
   });
 
   final String hintText;
@@ -17,11 +21,19 @@ class BaseTextFormField extends StatelessWidget {
   final Widget suffixIcon;
   final int minLine;
   final int maxLine;
+  final Function onSaved;
+  final Function onChanged;
+  final Function validator;
+  final KeyboardTypes keyboard;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       maxLines: maxLine,
       minLines: minLine,
+      keyboardType: Constant.keyboards[keyboard],
+      onChanged: onChanged != null ? onChanged : (String value){},
+      onSaved: onSaved != null ? onSaved : (String value){},
+      validator: validator != null ? validator : (String value) => null,
       style: TextStyle(
         color: Colors.white,
         letterSpacing: 0.75,
