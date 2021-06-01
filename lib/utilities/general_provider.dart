@@ -29,6 +29,8 @@ class GeneralProvider with ChangeNotifier{
 
   User get user => this._user;
 
+  List<Contact> get contacts => this._contacts;
+
   Future<void> initialize() async {
     SharedPreferences pref = await getPreference();
 
@@ -55,17 +57,20 @@ class GeneralProvider with ChangeNotifier{
     //TODO: get profile image for new contact
     List<Map> deviceContacts = await _contactManager.getAllContacts();
 
-    Contact.checkIfContactNameChangedOrContactDeleted(deviceContacts, _contacts);
+    bool isChanged = Contact.checkIfContactNameChangedOrContactDeleted(deviceContacts, _contacts);
 
     List<Map> newDeviceContacts = Contact.checkNewContacts(deviceContacts, _contacts);
     List newDeviceContactsPhoneNumber = newDeviceContacts.map((e) => e['phoneNumber']).toList();
     print(newDeviceContacts);
 
-    if(newDeviceContacts.isEmpty){
+    if(isChanged){
       await localDatabaseManager.clearContactList();
       _contacts.forEach((Contact contact) {
         contact.save();
       });
+    }
+
+    if(newDeviceContacts.isEmpty){
       return;
     }
 

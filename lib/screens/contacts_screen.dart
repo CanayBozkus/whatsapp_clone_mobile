@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:whatsapp_clone_mobile/models/dart_models/contact.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 import 'package:whatsapp_clone_mobile/widgets/general/base_card.dart';
+import 'package:provider/provider.dart';
+import 'package:whatsapp_clone_mobile/utilities/general_provider.dart';
 
 class ContactsScreen extends StatelessWidget {
   static const routeName = 'ContactsScreen';
@@ -11,6 +14,7 @@ class ContactsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Contact> contacts = context.watch<GeneralProvider>().contacts;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Constant.primaryColor,
@@ -109,61 +113,36 @@ class ContactsScreen extends StatelessWidget {
             onTap: (){},
           ),
 
-          BaseCard(
-            title: 'Canay Bozkuş',
-            subTitle: 'Nillius in verba',
-            showAvatar: true,
-            onTap: (){},
-            trailing: isCallScreen
-                ?
-            Row(
-              children: [
-                IconButton(
-                  icon: Icon(Icons.phone),
-                  color: Constant.primaryColor,
-                  iconSize: 28,
-                  splashRadius: 22,
-                  onPressed: (){},
-                ),
-                IconButton(
-                  icon: Icon(Icons.videocam),
-                  color: Constant.primaryColor,
-                  iconSize: 28,
-                  splashRadius: 22,
-                  onPressed: (){},
-                ),
-              ],
-            )
-                :
-            SizedBox.shrink(),
-          ),
-          BaseCard(
-            title: 'Canay Bozkuş',
-            showAvatar: true,
-            onTap: (){},
-            trailing: isCallScreen
-                ?
-            Row(
-              children: [
-                IconButton(
-                  icon: Icon(Icons.phone),
-                  color: Constant.primaryColor,
-                  iconSize: 28,
-                  splashRadius: 22,
-                  onPressed: (){},
-                ),
-                IconButton(
-                  icon: Icon(Icons.videocam),
-                  color: Constant.primaryColor,
-                  iconSize: 28,
-                  splashRadius: 22,
-                  onPressed: (){},
-                ),
-              ],
-            )
-                :
-            SizedBox.shrink(),
-          ),
+          ...contacts.map((Contact contact){
+            return BaseCard(
+              title: contact.name,
+              subTitle: contact.about,
+              showAvatar: true,
+              onTap: (){},
+              trailing: isCallScreen
+                  ?
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.phone),
+                    color: Constant.primaryColor,
+                    iconSize: 28,
+                    splashRadius: 22,
+                    onPressed: (){},
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.videocam),
+                    color: Constant.primaryColor,
+                    iconSize: 28,
+                    splashRadius: 22,
+                    onPressed: (){},
+                  ),
+                ],
+              )
+                  :
+              SizedBox.shrink(),
+            );
+          }).toList(),
 
           BaseCard(
             title: 'Invite friends',

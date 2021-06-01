@@ -53,7 +53,8 @@ class Contact {
     return [];
   }
 
-  static void checkIfContactNameChangedOrContactDeleted(List<Map> deviceContacts, List<Contact> contacts){
+  static bool checkIfContactNameChangedOrContactDeleted(List<Map> deviceContacts, List<Contact> contacts){
+    bool isChanged = false;
     contacts.forEach((Contact contact){
       Map deviceContact = deviceContacts.firstWhere(
             (element) => element['phoneNumber'] == contact.phoneNumber,
@@ -62,11 +63,15 @@ class Contact {
 
       if(deviceContact == null){
         contacts.remove(contact);
+        isChanged = true;
       }
-      else{
+      else if(contact.name != deviceContact['name']){
         contact.name = deviceContact['name'];
+        isChanged = true;
       }
     });
+
+    return isChanged;
   }
 
   static List<Map> checkNewContacts(List<Map> deviceContacts, List<Contact> contacts){
