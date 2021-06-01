@@ -33,15 +33,16 @@ class Contact {
     return contacts;
   }
 
-  static Future<List> checkIfNewContactsRegistered(List newContactsPhoneNumber, String jwt) async {
+  static Future<List> checkAndUpdateContactListFromCloud({List newContactsPhoneNumber, String jwt, List<String> removedContactsPhoneNumber}) async {
     http.Response responseRaw = await http.post(
-        Uri.http(Constant.serverURI, 'check-if-new-contacts-registered'),
+        Uri.http(Constant.serverURI, 'check-and-update-contact-list'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $jwt'
         },
         body: jsonEncode(<String, dynamic>{
           'newContactsPhoneNumber': newContactsPhoneNumber,
+          'removedContactsPhoneNumber': removedContactsPhoneNumber,
         })
     );
 
@@ -53,7 +54,7 @@ class Contact {
     return [];
   }
 
-  static bool checkIfContactNameChangedOrContactDeleted(List<Map> deviceContacts, List<Contact> contacts){
+  static bool checkIfContactNameChangedOrContactDeleted(List<Map> deviceContacts, List<Contact> contacts, List<String> removedContactsPhoneNumber){
     bool isChanged = false;
     contacts.forEach((Contact contact){
       Map deviceContact = deviceContacts.firstWhere(
@@ -64,6 +65,7 @@ class Contact {
       if(deviceContact == null){
         contacts.remove(contact);
         isChanged = true;
+        removedContactsPhoneNumber.add(contact.phoneNumber);
       }
       else if(contact.name != deviceContact['name']){
         contact.name = deviceContact['name'];

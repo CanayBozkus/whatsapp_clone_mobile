@@ -56,8 +56,8 @@ class GeneralProvider with ChangeNotifier{
   Future<void> refreshContactList() async {
     //TODO: get profile image for new contact
     List<Map> deviceContacts = await _contactManager.getAllContacts();
-
-    bool isChanged = Contact.checkIfContactNameChangedOrContactDeleted(deviceContacts, _contacts);
+    List<String> removedContactsPhoneNumber = [];
+    bool isChanged = Contact.checkIfContactNameChangedOrContactDeleted(deviceContacts, _contacts, removedContactsPhoneNumber);
 
     List<Map> newDeviceContacts = Contact.checkNewContacts(deviceContacts, _contacts);
     List newDeviceContactsPhoneNumber = newDeviceContacts.map((e) => e['phoneNumber']).toList();
@@ -74,7 +74,7 @@ class GeneralProvider with ChangeNotifier{
       return;
     }
 
-    List registeredUsers = await Contact.checkIfNewContactsRegistered(newDeviceContactsPhoneNumber, _jwt);
+    List registeredUsers = await Contact.checkAndUpdateContactListFromCloud(jwt: _jwt, newContactsPhoneNumber: newDeviceContactsPhoneNumber, removedContactsPhoneNumber: removedContactsPhoneNumber);
 
     if(registeredUsers.isNotEmpty){
       registeredUsers.forEach((registeredUser){
