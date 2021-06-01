@@ -25,6 +25,7 @@ class LocalDatabaseManager {
     hiveUser.name = user.name;
     hiveUser.id = user.id;
     hiveUser.showLastSeen = Constant.showLastSeenIndexes[user.showLastSeen];
+    hiveUser.about = user.about;
 
     _userBox.add(hiveUser);
   }

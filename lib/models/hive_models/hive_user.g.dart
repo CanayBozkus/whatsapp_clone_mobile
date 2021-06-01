@@ -22,13 +22,14 @@ class HiveUserAdapter extends TypeAdapter<HiveUser> {
       ..name = fields[2] as String
       ..contacts = (fields[3] as List)?.cast<dynamic>()
       ..profilePictureName = fields[4] as String
-      ..showLastSeen = fields[5] as int;
+      ..showLastSeen = fields[5] as int
+      ..about = fields[6] as String;
   }
 
   @override
   void write(BinaryWriter writer, HiveUser obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.phoneNumber)
       ..writeByte(1)
@@ -40,7 +41,9 @@ class HiveUserAdapter extends TypeAdapter<HiveUser> {
       ..writeByte(4)
       ..write(obj.profilePictureName)
       ..writeByte(5)
-      ..write(obj.showLastSeen);
+      ..write(obj.showLastSeen)
+      ..writeByte(6)
+      ..write(obj.about);
   }
 
   @override

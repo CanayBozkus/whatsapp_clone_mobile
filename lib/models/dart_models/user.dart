@@ -16,6 +16,7 @@ class User {
   String profilePictureName;
   File profilePicture;
   ShowLastSeenTypes showLastSeen = ShowLastSeenTypes.everyone;
+  String about = 'Hey there, I am new on WhatsApp.';
 
   Future<bool> register() async {
     if(profilePicture != null){
@@ -76,6 +77,7 @@ class User {
     this.contacts = hiveUser.contacts;
     this.id = hiveUser.id;
     this.showLastSeen = Constant.showLastSeenIndexesReverse[hiveUser.showLastSeen];
+    this.about = hiveUser.about ?? this.about;
 
     this.profilePicture = File('${path.path}/$profilePictureName');
   }

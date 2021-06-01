@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:whatsapp_clone_mobile/models/dart_models/user.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 import 'package:whatsapp_clone_mobile/widgets/general/base_card.dart';
+import 'package:provider/provider.dart';
+import 'package:whatsapp_clone_mobile/utilities/general_provider.dart';
 
 class ProfileSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    User user = context.watch<GeneralProvider>().user;
     return ListView(
       padding: EdgeInsets.symmetric(vertical: 20),
       children: [
@@ -16,7 +20,11 @@ class ProfileSetting extends StatelessWidget {
             child: CircleAvatar(
               radius: 80,
               child: ClipOval(
-                child: Image.asset('assets/images/avatar.png'),
+                child: user.profilePicture == null
+                    ?
+                Image.asset('assets/images/avatar.png')
+                    :
+                Image.file(user.profilePicture),
               ),
             ),
           ),
@@ -29,7 +37,7 @@ class ProfileSetting extends StatelessWidget {
             size: 40,
             color: Colors.white,
           ),
-          title: 'Canay Bozkuş',
+          title: user.name,
           subTitle: 'Name',
           reverseTitles: true,
           trailing: IconButton(
@@ -66,7 +74,7 @@ class ProfileSetting extends StatelessWidget {
             size: 40,
             color: Colors.white,
           ),
-          title: 'Nullius in Verba',
+          title: user.about,
           subTitle: 'About',
           reverseTitles: true,
           trailing: IconButton(
@@ -91,7 +99,7 @@ class ProfileSetting extends StatelessWidget {
             size: 40,
             color: Colors.white,
           ),
-          title: '555 653 85 37',
+          title: user.phoneNumber,
           subTitle: 'Phone',
           reverseTitles: true,
         ),

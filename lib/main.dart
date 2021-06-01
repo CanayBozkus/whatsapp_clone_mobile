@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_clone_mobile/route_generator.dart';
 import 'package:whatsapp_clone_mobile/screens/login_screen.dart';
+import 'package:whatsapp_clone_mobile/screens/main_screen.dart';
 import 'package:whatsapp_clone_mobile/services/local_database_manager.dart';
+import 'package:whatsapp_clone_mobile/services/sharedPreferences.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:whatsapp_clone_mobile/utilities/general_provider.dart';
@@ -11,10 +14,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await localDatabaseManager.init();
   await Permission.contacts.request();
-  runApp(MyApp());
+  SharedPreferences pref = await getPreference();
+  runApp(MyApp(pref: pref,));
 }
 
 class MyApp extends StatelessWidget {
+
+  MyApp({this.pref});
+  final SharedPreferences pref;
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -32,7 +39,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         onGenerateRoute: RouteGenerator.generateRoute,
-        initialRoute: LoginScreen.routeName,
+        initialRoute: pref.containsKey('jwt') ? MainScreen.routeName : LoginScreen.routeName,
       ),
     );
   }

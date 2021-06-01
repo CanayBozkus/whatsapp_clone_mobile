@@ -22,6 +22,8 @@ class GeneralProvider with ChangeNotifier{
     }
   }
 
+  User get user => this._user;
+
   Future<void> initialize() async {
     SharedPreferences pref = await getPreference();
 

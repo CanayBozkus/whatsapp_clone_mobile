@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 
@@ -15,6 +17,7 @@ class BaseCard extends StatelessWidget {
     this.activateHero = false,
     this.heroTag,
     this.reverseTitles = false,
+    this.avatarImage
   });
   final String title;
   final String subTitle;
@@ -28,6 +31,7 @@ class BaseCard extends StatelessWidget {
   final bool activateHero;
   final String heroTag;
   final bool reverseTitles;
+  final File avatarImage;
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -55,14 +59,22 @@ class BaseCard extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 30,
                     child: ClipOval(
-                      child: Image.asset('assets/images/avatar.png'),
+                      child: avatarImage == null
+                          ?
+                      Image.asset('assets/images/avatar.png')
+                          :
+                      Image.file(avatarImage),
                     ),
                   ),
                 ) :
                 CircleAvatar(
                   radius: 30,
                   child: ClipOval(
-                    child: Image.asset('assets/images/avatar.png'),
+                    child: avatarImage == null
+                        ?
+                    Image.asset('assets/images/avatar.png')
+                        :
+                    Image.file(avatarImage),
                   ),
                 )
                 )

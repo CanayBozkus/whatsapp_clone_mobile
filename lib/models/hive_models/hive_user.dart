@@ -16,4 +16,6 @@ class HiveUser {
   String profilePictureName;
   @HiveField(5)
   int showLastSeen;
+  @HiveField(6)
+  String about = 'Hey there, I am new on WhatsApp.';
 }

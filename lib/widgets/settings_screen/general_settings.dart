@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:whatsapp_clone_mobile/models/dart_models/user.dart';
 import 'package:whatsapp_clone_mobile/screens/settings_screen.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 import 'package:whatsapp_clone_mobile/widgets/general/base_card.dart';
+import 'package:provider/provider.dart';
+import 'package:whatsapp_clone_mobile/utilities/general_provider.dart';
 
 class GeneralSettings extends StatelessWidget {
   const GeneralSettings({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    User user = context.watch<GeneralProvider>().user;
     return ListView(
       padding: EdgeInsets.symmetric(vertical: 5),
       children: [
         BaseCard(
           showAvatar: true,
-          title: 'Canay Bozkuş',
-          subTitle: 'Nullius in Verba',
+          title: user.name,
+          subTitle: user.about,
           activateHero: true,
           heroTag: 'profile_image',
+          avatarImage: user.profilePicture,
           onTap: (){
             Navigator.pushNamed(context, SettingsScreen.routeName, arguments: SettingScreenBody.profile);
           },
