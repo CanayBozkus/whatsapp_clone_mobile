@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:whatsapp_clone_mobile/models/hive_models/hive_contact.dart';
 import 'package:whatsapp_clone_mobile/services/local_database_manager.dart';
-import 'package:http/http.dart' as http;
+import 'package:whatsapp_clone_mobile/services/network_manager.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 
 class Contact {
@@ -40,19 +38,13 @@ class Contact {
   }
 
   static Future<List> checkAndUpdateContactListFromCloud({List newContactsPhoneNumber, String jwt, List<String> removedContactsPhoneNumber}) async {
-    http.Response responseRaw = await http.post(
-        Uri.http(Constant.serverURI, 'check-and-update-contact-list'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer $jwt'
-        },
-        body: jsonEncode(<String, dynamic>{
-          'newContactsPhoneNumber': newContactsPhoneNumber,
-          'removedContactsPhoneNumber': removedContactsPhoneNumber,
-        })
-    );
+    Map postJson = {
+      'newContactsPhoneNumber': newContactsPhoneNumber,
+      'removedContactsPhoneNumber': removedContactsPhoneNumber,
+    };
 
-    Map response = jsonDecode(responseRaw.body);
+    Map response = await networkManager.sendPostRequestWithLogin(body: postJson, uri: 'check-and-update-contact-list');
+
     if(response['success']){
       return response['registeredUsers'];
     }

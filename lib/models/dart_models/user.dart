@@ -1,10 +1,9 @@
-import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_clone_mobile/models/hive_models/hive_user.dart';
 import 'package:whatsapp_clone_mobile/services/local_database_manager.dart';
+import 'package:whatsapp_clone_mobile/services/network_manager.dart';
 import 'package:whatsapp_clone_mobile/services/sharedPreferences.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 
@@ -19,29 +18,24 @@ class User {
   bool haveProfilePicture = false;
 
   Future<bool> register() async {
-    http.Response createResponseRaw = await http.post(
-      Uri.http(Constant.serverURI, 'create-user'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'name': name,
-        'phoneNumber': phoneNumber,
-        'haveProfilePicture': haveProfilePicture,
-        'profilePicture': haveProfilePicture ? profilePicture.readAsBytesSync() : null,
-      })
-    );
 
-    Map createResponse = jsonDecode(createResponseRaw.body);
+    Map postJson = {
+      'name': name,
+      'phoneNumber': phoneNumber,
+      'haveProfilePicture': haveProfilePicture,
+      'profilePicture': haveProfilePicture ? profilePicture.readAsBytesSync() : null,
+    };
 
-    if(createResponse['success']){
-      id = createResponse['id'];
+    Map response = await networkManager.sendPostRequestWithoutLogin(body: postJson, uri: 'create-user');
+
+    if(response['success']){
+      id = response['id'];
 
       await this.saveUser();
 
       SharedPreferences pref = await getPreference();
 
-      await pref.setString('jwt', createResponse['token']);
+      await pref.setString('jwt', response['token']);
 
       return true;
     }
