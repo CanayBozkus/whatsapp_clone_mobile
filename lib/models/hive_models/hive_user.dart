@@ -13,7 +13,7 @@ class HiveUser {
   @HiveField(3)
   List contacts;
   @HiveField(4)
-  String profilePictureName;
+  bool haveProfilePicture = false;
   @HiveField(5)
   int showLastSeen;
   @HiveField(6)

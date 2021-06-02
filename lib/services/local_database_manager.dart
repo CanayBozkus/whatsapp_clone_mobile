@@ -28,7 +28,7 @@ class LocalDatabaseManager {
   void saveUser(User user){
     HiveUser hiveUser = HiveUser();
     hiveUser.contacts = user.contacts;
-    hiveUser.profilePictureName = user.profilePictureName;
+    hiveUser.haveProfilePicture = user.haveProfilePicture;
     hiveUser.phoneNumber = user.phoneNumber;
     hiveUser.name = user.name;
     hiveUser.id = user.id;

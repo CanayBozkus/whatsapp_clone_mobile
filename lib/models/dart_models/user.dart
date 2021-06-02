@@ -12,20 +12,13 @@ class User {
   String name;
   String phoneNumber;
   String id;
-  List contacts;
-  String profilePictureName;
+  List contacts = [];
   File profilePicture;
   ShowLastSeenTypes showLastSeen = ShowLastSeenTypes.everyone;
   String about = 'Hey there, I am new on WhatsApp.';
+  bool haveProfilePicture = false;
 
   Future<bool> register() async {
-    if(profilePicture != null){
-      profilePictureName = phoneNumber.toString() + '_profile_picture' + '.' + profilePicture.path.split('.').last;
-    }
-    else {
-      profilePictureName = 'avatar.png';
-    }
-
     http.Response createResponseRaw = await http.post(
       Uri.http(Constant.serverURI, 'create-user'),
       headers: <String, String>{
@@ -34,9 +27,8 @@ class User {
       body: jsonEncode(<String, dynamic>{
         'name': name,
         'phoneNumber': phoneNumber,
-        'contacts': contacts,
-        'profilePictureName': profilePictureName,
-        'profilePicture': profilePicture != null ? profilePicture.readAsBytesSync() : null,
+        'haveProfilePicture': haveProfilePicture,
+        'profilePicture': haveProfilePicture ? profilePicture.readAsBytesSync() : null,
       })
     );
 
@@ -44,7 +36,6 @@ class User {
 
     if(createResponse['success']){
       id = createResponse['id'];
-      contacts = createResponse['contacts'];
 
       await this.saveUser();
 
@@ -59,12 +50,13 @@ class User {
   }
 
   Future<void> saveUser() async {
-    localDatabaseManager.saveUser(this);
-
-    final Directory path = await getApplicationDocumentsDirectory();
-    if (this.profilePicture != null) {
+    if (this.haveProfilePicture) {
+      final Directory path = await getApplicationDocumentsDirectory();
+      String profilePictureName = phoneNumber.toString() + '_profile_picture';
       await this.profilePicture.copy('${path.path}/$profilePictureName');
     }
+
+    localDatabaseManager.saveUser(this);
   }
 
   Future<void> getData() async {
@@ -73,12 +65,14 @@ class User {
 
     this.name = hiveUser.name;
     this.phoneNumber = hiveUser.phoneNumber;
-    this.profilePictureName = hiveUser.profilePictureName;
     this.contacts = hiveUser.contacts;
     this.id = hiveUser.id;
     this.showLastSeen = Constant.showLastSeenIndexesReverse[hiveUser.showLastSeen];
     this.about = hiveUser.about ?? this.about;
+    this.haveProfilePicture = hiveUser.haveProfilePicture;
 
-    this.profilePicture = File('${path.path}/$profilePictureName');
+    if(haveProfilePicture){
+      this.profilePicture = File('${path.path}/${phoneNumber}_profile_picture');
+    }
   }
 }

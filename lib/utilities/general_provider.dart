@@ -47,8 +47,6 @@ class GeneralProvider with ChangeNotifier{
   }
 
   Future<bool> register(User user) async {
-    List<String> contacts = await _contactManager.getAllContactPhoneNumber();
-    user.contacts = contacts;
     bool res = await user.register();
     return res;
   }

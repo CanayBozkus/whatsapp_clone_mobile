@@ -52,6 +52,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       final pickedFile = await picker.getImage(source: ImageSource.gallery);
                       if (pickedFile != null) {
                         _user.profilePicture = File(pickedFile.path);
+                        _user.haveProfilePicture = true;
 
                       } else {
                         print('No image selected.');
@@ -61,7 +62,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     child: CircleAvatar(
                       radius: 80,
                       child: ClipOval(
-                        child: _user.profilePicture == null
+                        child: !_user.haveProfilePicture
                             ?
                         ColorFiltered(
                           colorFilter: ColorFilter.mode(

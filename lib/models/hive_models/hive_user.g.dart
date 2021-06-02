@@ -21,7 +21,7 @@ class HiveUserAdapter extends TypeAdapter<HiveUser> {
       ..id = fields[1] as String
       ..name = fields[2] as String
       ..contacts = (fields[3] as List)?.cast<dynamic>()
-      ..profilePictureName = fields[4] as String
+      ..haveProfilePicture = fields[4] as bool
       ..showLastSeen = fields[5] as int
       ..about = fields[6] as String;
   }
@@ -39,7 +39,7 @@ class HiveUserAdapter extends TypeAdapter<HiveUser> {
       ..writeByte(3)
       ..write(obj.contacts)
       ..writeByte(4)
-      ..write(obj.profilePictureName)
+      ..write(obj.haveProfilePicture)
       ..writeByte(5)
       ..write(obj.showLastSeen)
       ..writeByte(6)
