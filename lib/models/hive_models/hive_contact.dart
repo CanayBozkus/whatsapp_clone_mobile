@@ -12,4 +12,6 @@ class HiveContact {
   String about;
   @HiveField(3)
   bool isInContactList;
+  @HiveField(4)
+  bool haveProfilePicture = false;
 }

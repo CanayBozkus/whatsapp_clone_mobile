@@ -117,6 +117,7 @@ class ContactsScreen extends StatelessWidget {
             return BaseCard(
               title: contact.name,
               subTitle: contact.about,
+              avatarImage: contact.profilePicture,
               showAvatar: true,
               onTap: (){},
               trailing: isCallScreen

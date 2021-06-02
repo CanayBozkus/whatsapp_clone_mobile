@@ -59,8 +59,7 @@ class User {
     localDatabaseManager.saveUser(this);
   }
 
-  Future<void> getData() async {
-    final Directory path = await getApplicationDocumentsDirectory();
+  Future<void> getData(Directory path) async {
     HiveUser hiveUser = localDatabaseManager.getUser();
 
     this.name = hiveUser.name;

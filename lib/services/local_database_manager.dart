@@ -71,7 +71,7 @@ class LocalDatabaseManager {
       hiveContact.phoneNumber = contact.phoneNumber;
       hiveContact.about = contact.about;
       hiveContact.isInContactList = true;
-
+      hiveContact.haveProfilePicture = contact.haveProfilePicture;
       _contactBox.add(hiveContact);
       return;
     }
@@ -82,6 +82,7 @@ class LocalDatabaseManager {
     hiveContact.phoneNumber = contact.phoneNumber;
     hiveContact.about = contact.about;
     hiveContact.isInContactList = true;
+    hiveContact.haveProfilePicture = contact.haveProfilePicture;
 
     _contactBox.putAt(index, hiveContact);
   }

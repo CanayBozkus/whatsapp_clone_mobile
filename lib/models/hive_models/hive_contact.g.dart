@@ -20,13 +20,14 @@ class HiveContactAdapter extends TypeAdapter<HiveContact> {
       ..name = fields[0] as String
       ..phoneNumber = fields[1] as String
       ..about = fields[2] as String
-      ..isInContactList = fields[3] as bool;
+      ..isInContactList = fields[3] as bool
+      ..haveProfilePicture = fields[4] as bool;
   }
 
   @override
   void write(BinaryWriter writer, HiveContact obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -34,7 +35,9 @@ class HiveContactAdapter extends TypeAdapter<HiveContact> {
       ..writeByte(2)
       ..write(obj.about)
       ..writeByte(3)
-      ..write(obj.isInContactList);
+      ..write(obj.isInContactList)
+      ..writeByte(4)
+      ..write(obj.haveProfilePicture);
   }
 
   @override

@@ -9,15 +9,16 @@ import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 class Contact {
   String phoneNumber;
   String name;
-  File profileImage;
+  File profilePicture;
   String about;
   bool isInContactList;
-
+  bool haveProfilePicture = false;
+  
   void save(){
     localDatabaseManager.saveContact(this);
   }
 
-  static List<Contact> getSavedContacts(){
+  static List<Contact> getSavedContacts(Directory path){
     List hiveContacts = localDatabaseManager.getSavedContacts();
     List<Contact> contacts = [];
 
@@ -27,6 +28,11 @@ class Contact {
       contact.phoneNumber = hiveContact.phoneNumber;
       contact.about = hiveContact.about;
       contact.isInContactList = hiveContact.isInContactList;
+      contact.haveProfilePicture = hiveContact.haveProfilePicture;
+
+      if(contact.haveProfilePicture){
+        contact.profilePicture = File('${path.path}/${contact.phoneNumber}_profile_picture');
+      }
       contacts.add(contact);
     });
 
@@ -47,7 +53,6 @@ class Contact {
     );
 
     Map response = jsonDecode(responseRaw.body);
-    print(response);
     if(response['success']){
       return response['registeredUsers'];
     }
@@ -56,6 +61,7 @@ class Contact {
 
   static bool checkIfContactNameChangedOrContactDeleted(List<Map> deviceContacts, List<Contact> contacts, List<String> removedContactsPhoneNumber){
     bool isChanged = false;
+    List<Contact> toBeRemoved = [];
     contacts.forEach((Contact contact){
       Map deviceContact = deviceContacts.firstWhere(
             (element) => element['phoneNumber'] == contact.phoneNumber,
@@ -63,8 +69,11 @@ class Contact {
       );
 
       if(deviceContact == null){
-        contacts.remove(contact);
+        toBeRemoved.add(contact);
         isChanged = true;
+        if(contact.haveProfilePicture){
+          contact.profilePicture.delete();
+        }
         removedContactsPhoneNumber.add(contact.phoneNumber);
       }
       else if(contact.name != deviceContact['name']){
@@ -73,6 +82,9 @@ class Contact {
       }
     });
 
+    toBeRemoved.forEach((contact) {
+      contacts.remove(contact);
+    });
     return isChanged;
   }
 

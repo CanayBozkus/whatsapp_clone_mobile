@@ -1,5 +1,8 @@
 
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_clone_mobile/models/dart_models/contact.dart';
 import 'package:whatsapp_clone_mobile/models/dart_models/user.dart';
@@ -18,6 +21,7 @@ class GeneralProvider with ChangeNotifier{
   User _user = User();
   List<Contact> _contacts;
   HiveDevice _deviceSettings;
+  Directory _path;
 
   int get mainScreenIndex => this._mainScreenIndex;
   set mainScreenIndex(int index){
@@ -36,11 +40,14 @@ class GeneralProvider with ChangeNotifier{
 
     _jwt = pref.getString('jwt');
 
-    _deviceSettings = localDatabaseManager.getDeviceSettings();
-    await _user.getData();
+    _path = await getApplicationDocumentsDirectory();
 
-    _contacts = Contact.getSavedContacts();
-    refreshContactList();
+    _deviceSettings = localDatabaseManager.getDeviceSettings();
+    await _user.getData(_path);
+
+    _contacts = Contact.getSavedContacts(_path);
+
+    await refreshContactList();
 
     _socket = SocketIO(jwt: _jwt);
     _socket.connect((){});
@@ -59,7 +66,6 @@ class GeneralProvider with ChangeNotifier{
 
     List<Map> newDeviceContacts = Contact.checkNewContacts(deviceContacts, _contacts);
     List newDeviceContactsPhoneNumber = newDeviceContacts.map((e) => e['phoneNumber']).toList();
-    print(newDeviceContacts);
 
     if(isChanged){
       await localDatabaseManager.clearContactList();
@@ -75,16 +81,23 @@ class GeneralProvider with ChangeNotifier{
     List registeredUsers = await Contact.checkAndUpdateContactListFromCloud(jwt: _jwt, newContactsPhoneNumber: newDeviceContactsPhoneNumber, removedContactsPhoneNumber: removedContactsPhoneNumber);
 
     if(registeredUsers.isNotEmpty){
-      registeredUsers.forEach((registeredUser){
+      for(var registeredUser in registeredUsers){
         Map deviceContact = newDeviceContacts.firstWhere((element) => element['phoneNumber'] == registeredUser['phoneNumber']);
         Contact contact = Contact();
         contact.name = deviceContact['name'];
         contact.phoneNumber = deviceContact['phoneNumber'];
         contact.about = registeredUser['about'];
         contact.isInContactList = true;
+        contact.haveProfilePicture = registeredUser['haveProfilePicture'];
+
+        if(contact.haveProfilePicture){
+          List<int> pictureBytes = List<int>.from(registeredUser['profilePicture']);
+          File picture = await File('${_path.path}/${contact.phoneNumber}_profile_picture').writeAsBytes(pictureBytes);
+          contact.profilePicture = picture;
+        }
         _contacts.add(contact);
         contact.save();
-      });
+      }
     }
 
   }
