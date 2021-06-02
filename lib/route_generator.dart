@@ -23,7 +23,7 @@ class RouteGenerator {
       case LoginScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(LoginScreen()));
       case RegistrationScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(RegistrationScreen()));
       case MainScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(MainScreen()));
-      case ChatScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(ChatScreen()));
+      case ChatScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(ChatScreen(room: args,)));
       case ChatDetailScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(ChatDetailScreen()));
       case ContactsScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(ContactsScreen(isCallScreen: args,)));
       case SettingsScreen.routeName: return MaterialPageRoute(builder: (_) => wrapper(SettingsScreen(body: args,)));

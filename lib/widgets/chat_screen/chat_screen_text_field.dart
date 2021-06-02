@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:whatsapp_clone_mobile/widgets/form/base_textformfield.dart';
 
 class ChatScreenTextInput extends StatelessWidget {
+  ChatScreenTextInput({this.onSaved});
+
+  final Function onSaved;
   @override
   Widget build(BuildContext context) {
     return BaseTextFormField(
+      onSaved: onSaved,
       maxLine: 3,
       borderRadius: 20,
       hintText: 'Type a message',

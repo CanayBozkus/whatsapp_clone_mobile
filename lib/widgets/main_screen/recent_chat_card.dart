@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:whatsapp_clone_mobile/models/dart_models/chatRoom.dart';
 import 'package:whatsapp_clone_mobile/screens/chat_screen.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 import 'package:whatsapp_clone_mobile/widgets/general/base_card.dart';
 
 class RecentChatCard extends StatelessWidget {
-  const RecentChatCard({this.showTime = true, this.isMuted});
-  final bool showTime;
-  final bool isMuted;
+  const RecentChatCard({this.room});
+  final bool showTime = true;
+  final bool isMuted = true;
 
+  final ChatRoom room;
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         BaseCard(
           onTap: (){
-            Navigator.pushNamed(context, ChatScreen.routeName);
+            Navigator.pushNamed(context, ChatScreen.routeName, arguments: room);
           },
-          title: 'Canay Bozkuş',
-          subTitle: 'naber? nasılsın naber? nasılsın naber? nasılsın',
+          title: room.contact.name,
+          subTitle: room.lastMessage.message,
+          avatarImage: room.contact.profilePicture,
           trailing: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -33,7 +36,7 @@ class RecentChatCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  isMuted ? Icon(
+                  room.isMuted ? Icon(
                     Icons.volume_off,
                     color: Colors.white70,
                   ) : SizedBox.shrink(),
@@ -45,7 +48,7 @@ class RecentChatCard extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                     child: Text(
-                      '1',
+                      room.unReadMessageCount.toString(),
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.white,
@@ -60,7 +63,7 @@ class RecentChatCard extends StatelessWidget {
           showAvatar: true,
         ),
         Padding(
-          padding:  EdgeInsets.only(left: 90.0),
+          padding: EdgeInsets.only(left: 90.0),
           child: Divider(color: Colors.white30,height: 1,),
         )
       ],

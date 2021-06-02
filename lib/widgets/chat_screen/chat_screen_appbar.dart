@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone_mobile/screens/chat_detail_screen.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 
 class ChatScreenAppBar extends StatelessWidget {
-  const ChatScreenAppBar({Key key}) : super(key: key);
+  ChatScreenAppBar({this.profilePicture, @required this.name});
 
+  final String name;
+  final File profilePicture;
   final double _appbarActionsWidth = 40;
   @override
   Widget build(BuildContext context) {
@@ -49,7 +53,11 @@ class ChatScreenAppBar extends StatelessWidget {
                       child: ClipOval(
                         child: Hero(
                           tag: 'profile_image',
-                          child: Image.asset('assets/images/avatar.png'),
+                          child: profilePicture == null
+                              ?
+                          Image.asset('assets/images/avatar.png')
+                              :
+                          Image.file(profilePicture),
                         ),
                       ),
                     ),
@@ -72,7 +80,7 @@ class ChatScreenAppBar extends StatelessWidget {
                       height: 8,
                     ),
                     Text(
-                      'Canay Bozkuş',
+                      name,
                       style: TextStyle(
                           fontSize: Constant.defaultFontSize,
                           color: Colors.white,

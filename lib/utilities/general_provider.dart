@@ -4,11 +4,14 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:whatsapp_clone_mobile/models/dart_models/chatRoom.dart';
 import 'package:whatsapp_clone_mobile/models/dart_models/contact.dart';
+import 'package:whatsapp_clone_mobile/models/dart_models/message.dart';
 import 'package:whatsapp_clone_mobile/models/dart_models/user.dart';
 import 'package:whatsapp_clone_mobile/models/hive_models/hive_device.dart';
 import 'package:whatsapp_clone_mobile/services/contact_manager.dart';
 import 'package:whatsapp_clone_mobile/services/local_database_manager.dart';
+import 'package:whatsapp_clone_mobile/services/network_manager.dart';
 import 'package:whatsapp_clone_mobile/services/sharedPreferences.dart';
 import 'package:whatsapp_clone_mobile/services/socket.dart';
 
@@ -22,6 +25,7 @@ class GeneralProvider with ChangeNotifier{
   List<Contact> _contacts;
   HiveDevice _deviceSettings;
   Directory _path;
+  List<ChatRoom> _chatRooms = [];
 
   int get mainScreenIndex => this._mainScreenIndex;
   set mainScreenIndex(int index){
@@ -35,11 +39,13 @@ class GeneralProvider with ChangeNotifier{
 
   List<Contact> get contacts => this._contacts;
 
+  List<ChatRoom> get chatRooms => this._chatRooms;
+
   Future<void> initialize() async {
     SharedPreferences pref = await getPreference();
 
     _jwt = pref.getString('jwt');
-
+    networkManager.init(_jwt);
     _path = await getApplicationDocumentsDirectory();
 
     _deviceSettings = localDatabaseManager.getDeviceSettings();
@@ -100,5 +106,34 @@ class GeneralProvider with ChangeNotifier{
       }
     }
 
+  }
+
+  ChatRoom getChatRoomFromContact(Contact contact){
+    ChatRoom room = _chatRooms.firstWhere((ChatRoom e) => e.contact == contact, orElse: () => null);
+
+    if(room == null){
+      room = ChatRoom();
+      room.contact = contact;
+      room.id = '${_user.phoneNumber}-${contact.phoneNumber}';
+      _chatRooms.add(room);
+      notifyListeners();
+    }
+
+    return room;
+  }
+
+  Future<void> sendMessage(ChatRoom room, Message message) async {
+    room.messages.insert(0, message);
+    room.lastMessage = message;
+    notifyListeners();
+
+    message.sendTime = DateTime.now();
+    message.to = room.contact.phoneNumber;
+    message.roomId = room.id;
+
+    bool success = await room.sendMessage(message);
+    print(success);
+
+    notifyListeners();
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:whatsapp_clone_mobile/models/dart_models/chatRoom.dart';
 import 'package:whatsapp_clone_mobile/models/dart_models/contact.dart';
+import 'package:whatsapp_clone_mobile/screens/chat_screen.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 import 'package:whatsapp_clone_mobile/widgets/general/base_card.dart';
 import 'package:provider/provider.dart';
@@ -119,7 +121,10 @@ class ContactsScreen extends StatelessWidget {
               subTitle: contact.about,
               avatarImage: contact.profilePicture,
               showAvatar: true,
-              onTap: (){},
+              onTap: (){
+                ChatRoom room = context.read<GeneralProvider>().getChatRoomFromContact(contact);
+                Navigator.pushReplacementNamed(context, ChatScreen.routeName, arguments: room);
+              },
               trailing: isCallScreen
                   ?
               Row(

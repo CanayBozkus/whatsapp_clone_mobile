@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:whatsapp_clone_mobile/models/dart_models/message.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 
 class MessageBubble extends StatelessWidget {
-  MessageBubble({this.isMe = true});
+  MessageBubble({this.isMe = true, this.message});
+  final Message message;
   final bool isMe;
   final double _radius = 12;
   @override
@@ -28,7 +30,7 @@ class MessageBubble extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  'Selam, naber? ',
+                  message.message,
                   style: TextStyle(
                       fontSize: 18,
                       color: Colors.white
@@ -57,7 +59,7 @@ class MessageBubble extends StatelessWidget {
                     ) : SizedBox.shrink(),
                     SizedBox(width: 3,),
                     Text(
-                      '11:02',
+                      '${message.sendTime.hour}:${message.sendTime.minute}',
                       style: TextStyle(
                         color: Colors.white70
                       ),
