@@ -40,4 +40,8 @@ class SocketIO {
     );
     this._socket.disconnect();
   }
+
+  setChannelHandler(String channel, Function function){
+    _socket.on(channel, function);
+  }
 }

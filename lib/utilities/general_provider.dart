@@ -57,6 +57,43 @@ class GeneralProvider with ChangeNotifier{
 
     _socket = SocketIO(jwt: _jwt);
     _socket.connect((){});
+
+    _socket.setChannelHandler('message', (data){
+      print(data);
+      Message message = Message();
+      message.roomId = data['roomId'];
+      message.to = data['to'];
+      message.sendTime = DateTime.parse(data['sendTime']);
+      message.message = data['message'];
+
+      ChatRoom room = _chatRooms.firstWhere((ChatRoom r) => r.id == message.roomId, orElse: () => null);
+
+      if(room != null){
+        room.messages.insert(0, message);
+        notifyListeners();
+        return;
+      }
+
+      room = ChatRoom();
+
+      room.id = message.roomId;
+      room.isSavedLocalDatabase = true;
+      room.lastMessage = message;
+      room.messages.insert(0, message);
+
+      Contact contact = Contact();
+      contact.phoneNumber = room.id.split('-')[0];
+      contact.haveProfilePicture = false;
+      contact.name = contact.phoneNumber;
+      contact.isInContactList = false;
+      contact.about = '';
+
+      _contacts.add(contact);
+      room.contact = contact;
+
+      _chatRooms.add(room);
+      notifyListeners();
+    });
   }
 
   Future<bool> register(User user) async {
@@ -135,5 +172,9 @@ class GeneralProvider with ChangeNotifier{
     print(success);
 
     notifyListeners();
+  }
+
+  void socketMessageHandler(){
+
   }
 }
