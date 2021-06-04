@@ -60,6 +60,7 @@ class GeneralProvider with ChangeNotifier{
     connectSocket();
 
     _socket.setChannelHandler('message', socketMessageHandler);
+    _socket.setChannelHandler('message-seen', socketMessagesSeenHandler);
   }
 
   Future<bool> register(User user) async {
@@ -118,6 +119,7 @@ class GeneralProvider with ChangeNotifier{
       room = ChatRoom();
       room.contact = contact;
       room.id = '${_user.phoneNumber}-${contact.phoneNumber}';
+      room.membersPhoneNumber = [_user.phoneNumber, contact.phoneNumber];
       _chatRooms.add(room);
       notifyListeners();
     }
@@ -127,7 +129,6 @@ class GeneralProvider with ChangeNotifier{
 
   Future<void> sendMessage(ChatRoom room, Message message) async {
     message.sendTime = DateTime.now();
-    message.to = room.contact.phoneNumber;
     message.roomId = room.id;
     message.from = _user.phoneNumber;
 
@@ -136,8 +137,11 @@ class GeneralProvider with ChangeNotifier{
     notifyListeners();
 
     bool success = await room.sendMessage(message);
-    print(success);
 
+    if(!_chatRooms.contains(room)){
+      _chatRooms.add(room);
+      room.save();
+    }
     notifyListeners();
   }
 
@@ -151,6 +155,9 @@ class GeneralProvider with ChangeNotifier{
       room.lastMessage = message;
       if(_currentChatRoom != room){
         room.unReadMessageCount++;
+      }
+      else {
+        room.sendMessagesSeenInfo();
       }
       notifyListeners();
       return;
@@ -167,6 +174,7 @@ class GeneralProvider with ChangeNotifier{
     room.id = message.roomId;
     room.lastMessage = message;
     room.messages.insert(0, message);
+    room.membersPhoneNumber = [_user.phoneNumber, message.from];
     room.unReadMessageCount++;
 
     Contact contact = _contacts.firstWhere((Contact e) => e.phoneNumber == message.from, orElse: () => null);
@@ -191,7 +199,6 @@ class GeneralProvider with ChangeNotifier{
     if(!_listenedToContacts.contains(room.contact)){
       _socket.setChannelHandler('${room.contact.phoneNumber}-status-channel', (data){
         room.contact.isOnline = data['isOnline'];
-        print(data['lastSeenTime']);
         room.contact.lastSeenTime = data['lastSeenTime'] != null ? DateTime.parse(data['lastSeenTime']) : null;
         notifyListeners();
       });
@@ -200,7 +207,7 @@ class GeneralProvider with ChangeNotifier{
     }
 
     if(room.unReadMessageCount > 0){
-      room.sendMessageSeenInfo();
+      room.sendMessagesSeenInfo();
       room.unReadMessageCount = 0;
     }
 
@@ -218,5 +225,16 @@ class GeneralProvider with ChangeNotifier{
       return;
     }
     _socket.connect((){});
+  }
+
+  void socketMessagesSeenHandler(data) async {
+    DateTime seenTime = DateTime.parse(data['seenTime']);
+    String roomId = data['roomId'];
+
+    ChatRoom room = _chatRooms.firstWhere((ChatRoom e) => e.id == roomId, orElse: () => null);
+
+    if(room == null) return;
+    room.messagesSeenHandler(seenTime, _user.phoneNumber);
+    notifyListeners();
   }
 }

@@ -49,7 +49,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     children: [
                       ...room.messages.map((Message message){
                         return MessageBubble(
-                          isMe: user.phoneNumber != message.to,
+                          isMe: user.phoneNumber == message.from,
                           message: message,
                         );
                       }).toList(),

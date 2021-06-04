@@ -55,11 +55,9 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     print(0);
     if(state == AppLifecycleState.paused){
       Provider.of<GeneralProvider>(context, listen: false).disconnectSocket();
-      print(1);
     }
     else if(state == AppLifecycleState.resumed){
       Provider.of<GeneralProvider>(context, listen: false).connectSocket();
-      print(2);
     }
 
     super.didChangeAppLifecycleState(state);
