@@ -11,6 +11,8 @@ class Contact {
   String about;
   bool isInContactList;
   bool haveProfilePicture = false;
+  bool isOnline = false;
+  DateTime lastSeenTime;
   
   void save(){
     localDatabaseManager.saveContact(this);
@@ -118,5 +120,21 @@ class Contact {
 
     contact.save();
     return contact;
+  }
+
+  Future<void> checkContactStatus({String userPhoneNumber, Function callback}) async {
+    Map res = await networkManager.sendGetRequestWithLogin(
+        uri: 'check-contact-status',
+        query: {
+          'phoneNumber': phoneNumber,
+          'userPhoneNumber': userPhoneNumber,
+        }
+    );
+
+    this.isOnline = res['isOnline'];
+    this.lastSeenTime = res['lastSeenTime'] != null ? DateTime.parse(res['lastSeenTime']) : null;
+    if(callback != null){
+      callback();
+    }
   }
 }

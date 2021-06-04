@@ -41,6 +41,8 @@ class RecentChatCard extends StatelessWidget {
                     color: Colors.white70,
                   ) : SizedBox.shrink(),
                   SizedBox(width: 5,),
+                  room.unReadMessageCount != 0
+                      ?
                   Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -54,7 +56,10 @@ class RecentChatCard extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                  ),
+                  )
+                      :
+                  SizedBox.shrink()
+                  ,
                   SizedBox(width: 5,),
                 ],
               ),

@@ -1,14 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:whatsapp_clone_mobile/models/dart_models/contact.dart';
 import 'package:whatsapp_clone_mobile/screens/chat_detail_screen.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
+import 'package:provider/provider.dart';
+import 'package:whatsapp_clone_mobile/utilities/general_provider.dart';
 
 class ChatScreenAppBar extends StatelessWidget {
-  ChatScreenAppBar({this.profilePicture, @required this.name});
+  ChatScreenAppBar({this.contact});
 
-  final String name;
-  final File profilePicture;
+  final Contact contact;
   final double _appbarActionsWidth = 40;
   @override
   Widget build(BuildContext context) {
@@ -31,6 +33,7 @@ class ChatScreenAppBar extends StatelessWidget {
           children: [
             InkWell(
               onTap: () {
+                context.read<GeneralProvider>().openAndCloseChatRoomHandler(null);
                 Navigator.pop(context);
               },
               child: Container(
@@ -53,11 +56,11 @@ class ChatScreenAppBar extends StatelessWidget {
                       child: ClipOval(
                         child: Hero(
                           tag: 'profile_image',
-                          child: profilePicture == null
+                          child: contact.profilePicture == null
                               ?
                           Image.asset('assets/images/avatar.png')
                               :
-                          Image.file(profilePicture),
+                          Image.file(contact.profilePicture),
                         ),
                       ),
                     ),
@@ -80,7 +83,7 @@ class ChatScreenAppBar extends StatelessWidget {
                       height: 8,
                     ),
                     Text(
-                      name,
+                      contact.name,
                       style: TextStyle(
                           fontSize: Constant.defaultFontSize,
                           color: Colors.white,
@@ -90,13 +93,17 @@ class ChatScreenAppBar extends StatelessWidget {
                     SizedBox(
                       height: 2,
                     ),
+                    contact.isOnline
+                        ?
                     Text(
                       'online',
                       style: TextStyle(
                           fontSize: 14,
                           color: Colors.white70,
                           fontWeight: FontWeight.w500),
-                    ),
+                    )
+                        :
+                    SizedBox.shrink(),
                   ],
                 ),
               ),

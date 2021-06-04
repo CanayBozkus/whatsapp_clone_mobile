@@ -17,7 +17,7 @@ class MainScreen extends StatefulWidget {
   _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   PageController _pageController;
   int _currentPageIndex;
 
@@ -33,6 +33,8 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
+
     _pageController = PageController(
       initialPage: 1,
     );
@@ -42,9 +44,27 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+
     _pageController.dispose();
     super.dispose();
   }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(0);
+    if(state == AppLifecycleState.paused){
+      Provider.of<GeneralProvider>(context, listen: false).disconnectSocket();
+      print(1);
+    }
+    else if(state == AppLifecycleState.resumed){
+      Provider.of<GeneralProvider>(context, listen: false).connectSocket();
+      print(2);
+    }
+
+    super.didChangeAppLifecycleState(state);
+  }
+  
   @override
   Widget build(BuildContext context) {
     _currentPageIndex = context.watch<GeneralProvider>().mainScreenIndex;

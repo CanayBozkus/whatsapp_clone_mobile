@@ -26,6 +26,8 @@ class GeneralProvider with ChangeNotifier{
   HiveDevice _deviceSettings;
   Directory _path;
   List<ChatRoom> _chatRooms = [];
+  ChatRoom _currentChatRoom;
+  List<Contact> _listenedToContacts = [];
 
   int get mainScreenIndex => this._mainScreenIndex;
   set mainScreenIndex(int index){
@@ -55,8 +57,7 @@ class GeneralProvider with ChangeNotifier{
 
     await refreshContactList();
 
-    _socket = SocketIO(jwt: _jwt);
-    _socket.connect((){});
+    connectSocket();
 
     _socket.setChannelHandler('message', socketMessageHandler);
   }
@@ -147,6 +148,10 @@ class GeneralProvider with ChangeNotifier{
 
     if(room != null){
       room.messages.insert(0, message);
+      room.lastMessage = message;
+      if(_currentChatRoom != room){
+        room.unReadMessageCount++;
+      }
       notifyListeners();
       return;
     }
@@ -162,7 +167,8 @@ class GeneralProvider with ChangeNotifier{
     room.id = message.roomId;
     room.lastMessage = message;
     room.messages.insert(0, message);
-    
+    room.unReadMessageCount++;
+
     Contact contact = _contacts.firstWhere((Contact e) => e.phoneNumber == message.from, orElse: () => null);
     
     if(contact == null){
@@ -173,5 +179,44 @@ class GeneralProvider with ChangeNotifier{
     room.contact = contact;
     room.save();
     _chatRooms.add(room);
+  }
+
+  void openAndCloseChatRoomHandler(ChatRoom room) async {
+    if(room == null){
+      _currentChatRoom = null;
+      notifyListeners();
+      return;
+    }
+
+    if(!_listenedToContacts.contains(room.contact)){
+      _socket.setChannelHandler('${room.contact.phoneNumber}-status-channel', (data){
+        room.contact.isOnline = data['isOnline'];
+        print(data['lastSeenTime']);
+        room.contact.lastSeenTime = data['lastSeenTime'] != null ? DateTime.parse(data['lastSeenTime']) : null;
+        notifyListeners();
+      });
+      await room.contact.checkContactStatus(userPhoneNumber: _user.phoneNumber, callback: () => notifyListeners());
+      _listenedToContacts.add(room.contact);
+    }
+
+    if(room.unReadMessageCount > 0){
+      room.sendMessageSeenInfo();
+      room.unReadMessageCount = 0;
+    }
+
+    _currentChatRoom = room;
+  }
+
+  void disconnectSocket(){
+    _socket.disconnect();
+  }
+  
+  void connectSocket(){
+    if(_socket == null){
+      _socket = SocketIO(jwt: _jwt);
+      _socket.connect((){});
+      return;
+    }
+    _socket.connect((){});
   }
 }

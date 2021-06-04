@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:http/http.dart' as http;
+import 'package:whatsapp_clone_mobile/services/network_manager.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 
 class SocketIO {
@@ -27,16 +28,9 @@ class SocketIO {
     this._socket.connect();
   }
 
-  disconnect(phoneNumber, jwt) async {
-    await http.post(
-        Uri.http(Constant.serverURI, 'disconnect-socket'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer $jwt'
-        },
-        body: jsonEncode(<String, String> {
-          'phoneNumber': phoneNumber
-        })
+  disconnect() async {
+    networkManager.sendPostRequestWithLogin(
+      uri: 'disconnect',
     );
     this._socket.disconnect();
   }

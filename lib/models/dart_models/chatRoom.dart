@@ -32,4 +32,8 @@ class ChatRoom {
   void save(){
     this.isSavedLocalDatabase = true;
   }
+
+  Future<void> sendMessageSeenInfo() async {
+
+  }
 }

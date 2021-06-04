@@ -7,6 +7,60 @@ class MessageBubble extends StatelessWidget {
   final Message message;
   final bool isMe;
   final double _radius = 12;
+
+  Widget messageStatusIcon(Message message){
+    if(!isMe){
+      return SizedBox.shrink();
+    }
+
+    if(!message.isSent){
+      return Icon(
+        Icons.watch_later_outlined,
+        color: Colors.white,
+        size: 18,
+      );
+    }
+
+    if(message.isSeen){
+      return Row(
+        children: [
+          SizedBox(
+            width: 8,
+            child: Icon(
+              Icons.check,
+              color: Colors.blue,
+              size: 18,
+            ),
+          ),
+          Icon(
+            Icons.check,
+            color: Colors.blue,
+            size: 18,
+          ),
+        ],
+      );
+    }
+    else{
+      return Row(
+        children: [
+          SizedBox(
+            width: 8,
+            child: Icon(
+              Icons.check,
+              color: Colors.grey,
+              size: 18,
+            ),
+          ),
+          Icon(
+            Icons.check,
+            color: Colors.grey,
+            size: 18,
+          ),
+        ],
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -40,37 +94,7 @@ class MessageBubble extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    isMe
-                        ?
-                    (
-                        message.isSent
-                            ?
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 8,
-                              child: Icon(
-                                Icons.check,
-                                color: Colors.blue,
-                                size: 18,
-                              ),
-                            ),
-                            Icon(
-                              Icons.check,
-                              color: Colors.blue,
-                              size: 18,
-                            ),
-                          ],
-                        )
-                            :
-                        Icon(
-                          Icons.watch_later_outlined,
-                          color: Colors.white,
-                          size: 18,
-                        )
-                    )
-                        :
-                    SizedBox.shrink(),
+                    messageStatusIcon(message),
                     SizedBox(width: 3,),
                     Text(
                       '${message.sendTime.hour}:${message.sendTime.minute}',

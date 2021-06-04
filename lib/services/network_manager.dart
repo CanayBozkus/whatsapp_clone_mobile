@@ -19,7 +19,7 @@ class NetworkManager {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(body)
+        body: jsonEncode(body ?? {})
     );
     Map response = jsonDecode(responseRaw.body);
 
@@ -33,7 +33,7 @@ class NetworkManager {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $_jwt'
         },
-        body: jsonEncode(body)
+        body: jsonEncode(body ?? {})
     );
     Map response = jsonDecode(responseRaw.body);
 
@@ -42,7 +42,7 @@ class NetworkManager {
 
   Future<Map> sendGetRequestWithLogin({String uri, Map<String, dynamic> query}) async {
     http.Response responseRaw = await http.get(
-        Uri.http(Constant.serverURI, uri, query),
+        Uri.http(Constant.serverURI, uri, query ?? {}),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $_jwt'

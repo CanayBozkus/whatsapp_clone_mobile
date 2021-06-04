@@ -23,6 +23,12 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   Message message = Message();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    context.read<GeneralProvider>().openAndCloseChatRoomHandler(widget.room);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     User user = context.read<GeneralProvider>().user;
@@ -35,7 +41,7 @@ class _ChatScreenState extends State<ChatScreen> {
             key: _formKey,
             child: Column(
               children: [
-                ChatScreenAppBar(name: widget.room.contact.name, profilePicture: widget.room.contact.profilePicture,),
+                ChatScreenAppBar(contact: room.contact,),
                 Expanded(
                   child: ListView(
                     reverse: true,
