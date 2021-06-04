@@ -58,42 +58,7 @@ class GeneralProvider with ChangeNotifier{
     _socket = SocketIO(jwt: _jwt);
     _socket.connect((){});
 
-    _socket.setChannelHandler('message', (data){
-      print(data);
-      Message message = Message();
-      message.roomId = data['roomId'];
-      message.to = data['to'];
-      message.sendTime = DateTime.parse(data['sendTime']);
-      message.message = data['message'];
-
-      ChatRoom room = _chatRooms.firstWhere((ChatRoom r) => r.id == message.roomId, orElse: () => null);
-
-      if(room != null){
-        room.messages.insert(0, message);
-        notifyListeners();
-        return;
-      }
-
-      room = ChatRoom();
-
-      room.id = message.roomId;
-      room.isSavedLocalDatabase = true;
-      room.lastMessage = message;
-      room.messages.insert(0, message);
-
-      Contact contact = Contact();
-      contact.phoneNumber = room.id.split('-')[0];
-      contact.haveProfilePicture = false;
-      contact.name = contact.phoneNumber;
-      contact.isInContactList = false;
-      contact.about = '';
-
-      _contacts.add(contact);
-      room.contact = contact;
-
-      _chatRooms.add(room);
-      notifyListeners();
-    });
+    _socket.setChannelHandler('message', socketMessageHandler);
   }
 
   Future<bool> register(User user) async {
@@ -160,13 +125,14 @@ class GeneralProvider with ChangeNotifier{
   }
 
   Future<void> sendMessage(ChatRoom room, Message message) async {
-    room.messages.insert(0, message);
-    room.lastMessage = message;
-    notifyListeners();
-
     message.sendTime = DateTime.now();
     message.to = room.contact.phoneNumber;
     message.roomId = room.id;
+    message.from = _user.phoneNumber;
+
+    room.messages.insert(0, message);
+    room.lastMessage = message;
+    notifyListeners();
 
     bool success = await room.sendMessage(message);
     print(success);
@@ -174,7 +140,38 @@ class GeneralProvider with ChangeNotifier{
     notifyListeners();
   }
 
-  void socketMessageHandler(){
+  Future<void> socketMessageHandler(data) async {
+    Message message = Message.getMessageFromSocketData(data);
 
+    ChatRoom room = _chatRooms.firstWhere((ChatRoom r) => r.id == message.roomId, orElse: () => null);
+
+    if(room != null){
+      room.messages.insert(0, message);
+      notifyListeners();
+      return;
+    }
+
+    await createNoneExistChatRoomFromMessage(message);
+
+    notifyListeners();
+  }
+
+  Future<void> createNoneExistChatRoomFromMessage(Message message) async {
+    ChatRoom room = ChatRoom();
+
+    room.id = message.roomId;
+    room.lastMessage = message;
+    room.messages.insert(0, message);
+    
+    Contact contact = _contacts.firstWhere((Contact e) => e.phoneNumber == message.from, orElse: () => null);
+    
+    if(contact == null){
+      contact = await Contact.getAndSaveUnlistedContactDataFromCloud(phoneNumber: message.from, path: _path.path, userPhoneNumber: _user.phoneNumber);
+      _contacts.add(contact);
+    }
+
+    room.contact = contact;
+    room.save();
+    _chatRooms.add(room);
   }
 }

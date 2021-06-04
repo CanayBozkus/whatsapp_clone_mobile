@@ -40,6 +40,20 @@ class NetworkManager {
     return response;
   }
 
+  Future<Map> sendGetRequestWithLogin({String uri, Map<String, dynamic> query}) async {
+    http.Response responseRaw = await http.get(
+        Uri.http(Constant.serverURI, uri, query),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $_jwt'
+        },
+    );
+
+    Map response = jsonDecode(responseRaw.body);
+
+    return response;
+  }
+
 }
 
 NetworkManager networkManager = NetworkManager();

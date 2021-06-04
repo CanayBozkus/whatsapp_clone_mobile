@@ -27,7 +27,7 @@ class MessageBubble extends StatelessWidget {
                 border: Border.all(color: Colors.black, width: 2,)
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   message.message,
@@ -40,23 +40,37 @@ class MessageBubble extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    isMe ? Row(
-                      children: [
-                        SizedBox(
-                          width: 8,
-                          child: Icon(
-                            Icons.check,
-                            color: Colors.blue,
-                            size: 18,
-                          ),
-                        ),
+                    isMe
+                        ?
+                    (
+                        message.isSent
+                            ?
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 8,
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.blue,
+                                size: 18,
+                              ),
+                            ),
+                            Icon(
+                              Icons.check,
+                              color: Colors.blue,
+                              size: 18,
+                            ),
+                          ],
+                        )
+                            :
                         Icon(
-                          Icons.check,
-                          color: Colors.blue,
+                          Icons.watch_later_outlined,
+                          color: Colors.white,
                           size: 18,
-                        ),
-                      ],
-                    ) : SizedBox.shrink(),
+                        )
+                    )
+                        :
+                    SizedBox.shrink(),
                     SizedBox(width: 3,),
                     Text(
                       '${message.sendTime.hour}:${message.sendTime.minute}',

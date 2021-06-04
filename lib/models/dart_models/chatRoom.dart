@@ -17,7 +17,8 @@ class ChatRoom {
       'message': message.message,
       'roomId': message.roomId,
       'to': message.to,
-      'sendTime': message.sendTime.toIso8601String()
+      'sendTime': message.sendTime.toIso8601String(),
+      'from': message.from
     };
     Map response = await networkManager.sendPostRequestWithLogin(body: postJson, uri: 'send-message');
 
@@ -26,5 +27,9 @@ class ChatRoom {
     }
 
     return response['success'];
+  }
+
+  void save(){
+    this.isSavedLocalDatabase = true;
   }
 }

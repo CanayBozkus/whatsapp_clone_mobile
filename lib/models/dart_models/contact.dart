@@ -93,4 +93,30 @@ class Contact {
 
     return newDeviceContacts;
   }
+
+  static Future<Contact> getAndSaveUnlistedContactDataFromCloud({String phoneNumber, String path, String userPhoneNumber}) async {
+    Map res = await networkManager.sendGetRequestWithLogin(
+      uri: 'get-unlisted-contact-data',
+      query: {
+        'phoneNumber': phoneNumber,
+        'from': userPhoneNumber,
+      }
+    );
+
+    Contact contact = Contact();
+    contact.phoneNumber = phoneNumber;
+    contact.name = phoneNumber;
+    contact.about = res['about'];
+    contact.isInContactList = false;
+    contact.haveProfilePicture = res['haveProfilePicture'];
+
+    if(contact.haveProfilePicture){
+      List<int> pictureBytes = List<int>.from(res['profilePicture']);
+      File picture = await File('$path/${contact.phoneNumber}_profile_picture').writeAsBytes(pictureBytes);
+      contact.profilePicture = picture;
+    }
+
+    contact.save();
+    return contact;
+  }
 }
