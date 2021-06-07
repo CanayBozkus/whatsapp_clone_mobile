@@ -116,38 +116,41 @@ class ContactsScreen extends StatelessWidget {
           ),
 
           ...contacts.map((Contact contact){
-            return BaseCard(
-              title: contact.name,
-              subTitle: contact.about,
-              avatarImage: contact.profilePicture,
-              showAvatar: true,
-              onTap: (){
-                ChatRoom room = context.read<GeneralProvider>().getChatRoomFromContact(contact);
-                Navigator.pushReplacementNamed(context, ChatScreen.routeName, arguments: room);
-              },
-              trailing: isCallScreen
-                  ?
-              Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.phone),
-                    color: Constant.primaryColor,
-                    iconSize: 28,
-                    splashRadius: 22,
-                    onPressed: (){},
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.videocam),
-                    color: Constant.primaryColor,
-                    iconSize: 28,
-                    splashRadius: 22,
-                    onPressed: (){},
-                  ),
-                ],
-              )
-                  :
-              SizedBox.shrink(),
-            );
+            if(contact.isInContactList){
+              return BaseCard(
+                title: contact.name,
+                subTitle: contact.about,
+                avatarImage: contact.profilePicture,
+                showAvatar: true,
+                onTap: (){
+                  ChatRoom room = context.read<GeneralProvider>().getChatRoomFromContact(contact);
+                  Navigator.pushReplacementNamed(context, ChatScreen.routeName, arguments: room);
+                },
+                trailing: isCallScreen
+                    ?
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.phone),
+                      color: Constant.primaryColor,
+                      iconSize: 28,
+                      splashRadius: 22,
+                      onPressed: (){},
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.videocam),
+                      color: Constant.primaryColor,
+                      iconSize: 28,
+                      splashRadius: 22,
+                      onPressed: (){},
+                    ),
+                  ],
+                )
+                    :
+                SizedBox.shrink(),
+              );
+            }
+            return SizedBox.shrink();
           }).toList(),
 
           BaseCard(

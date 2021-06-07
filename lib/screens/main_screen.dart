@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:whatsapp_clone_mobile/screens/contacts_screen.dart';
@@ -34,7 +35,10 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
-
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    messaging.getToken().then((value){
+      print(value);
+    });
     _pageController = PageController(
       initialPage: 1,
     );

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:whatsapp_clone_mobile/models/hive_models/hive_contact.dart';
+import 'package:whatsapp_clone_mobile/services/file_manager.dart';
 import 'package:whatsapp_clone_mobile/services/local_database_manager.dart';
 import 'package:whatsapp_clone_mobile/services/network_manager.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
@@ -31,7 +32,7 @@ class Contact {
       contact.haveProfilePicture = hiveContact.haveProfilePicture;
 
       if(contact.haveProfilePicture){
-        contact.profilePicture = File('${path.path}/${contact.phoneNumber}_profile_picture');
+        contact.profilePicture = fileManager.readImage('${contact.phoneNumber}_profile_picture');
       }
       contacts.add(contact);
     });
@@ -113,9 +114,8 @@ class Contact {
     contact.haveProfilePicture = res['haveProfilePicture'];
 
     if(contact.haveProfilePicture){
-      List<int> pictureBytes = List<int>.from(res['profilePicture']);
-      File picture = await File('$path/${contact.phoneNumber}_profile_picture').writeAsBytes(pictureBytes);
-      contact.profilePicture = picture;
+      String imageName = '${contact.phoneNumber}_profile_picture';
+      contact.profilePicture = await fileManager.saveByteImage(res['profilePicture'], imageName);
     }
 
     contact.save();

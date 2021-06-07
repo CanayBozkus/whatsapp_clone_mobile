@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_clone_mobile/models/hive_models/hive_user.dart';
+import 'package:whatsapp_clone_mobile/services/file_manager.dart';
 import 'package:whatsapp_clone_mobile/services/local_database_manager.dart';
 import 'package:whatsapp_clone_mobile/services/network_manager.dart';
 import 'package:whatsapp_clone_mobile/services/sharedPreferences.dart';
@@ -43,11 +44,10 @@ class User {
     return false;
   }
 
-  Future<void> saveUser() async {
-    if (this.haveProfilePicture) {
-      final Directory path = await getApplicationDocumentsDirectory();
+  Future<void> saveUser({bool saveImage = true}) async {
+    if (saveImage && this.haveProfilePicture) {
       String profilePictureName = phoneNumber.toString() + '_profile_picture';
-      await this.profilePicture.copy('${path.path}/$profilePictureName');
+      await fileManager.saveImage(profilePicture, profilePictureName);
     }
 
     localDatabaseManager.saveUser(this);
@@ -65,7 +65,41 @@ class User {
     this.haveProfilePicture = hiveUser.haveProfilePicture;
 
     if(haveProfilePicture){
-      this.profilePicture = File('${path.path}/${phoneNumber}_profile_picture');
+      String imageName = '${phoneNumber}_profile_picture';
+      this.profilePicture = fileManager.readImage(imageName);));
     }
+  }
+
+  Future<bool> login(String path) async {
+    Map res = await networkManager.sendPostRequestWithoutLogin(
+      uri: 'login',
+      body: {
+        "phoneNumber": phoneNumber,
+      }
+    );
+
+    if(res['success']){
+      Map user = res['user'];
+      haveProfilePicture = user['haveProfilePicture'];
+      name = user['name'];
+      about = user['about'];
+      showLastSeen = Constant.showLastSeenIndexesReverse[user['showLastSeen']];
+      id = user['id'];
+
+      if(user['haveProfilePicture']){
+        String imageName = '${this.phoneNumber}_profile_picture';
+        this.profilePicture  = await fileManager.saveByteImage(user['profilePicture'], imageName);
+      }
+
+      await saveUser(saveImage: false);
+
+      SharedPreferences pref = await getPreference();
+
+      await pref.setString('jwt', res['token']);
+
+      return true;
+    }
+
+    return false;
   }
 }

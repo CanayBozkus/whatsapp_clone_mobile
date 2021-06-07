@@ -10,6 +10,7 @@ import 'package:whatsapp_clone_mobile/models/dart_models/message.dart';
 import 'package:whatsapp_clone_mobile/models/dart_models/user.dart';
 import 'package:whatsapp_clone_mobile/models/hive_models/hive_device.dart';
 import 'package:whatsapp_clone_mobile/services/contact_manager.dart';
+import 'package:whatsapp_clone_mobile/services/file_manager.dart';
 import 'package:whatsapp_clone_mobile/services/local_database_manager.dart';
 import 'package:whatsapp_clone_mobile/services/network_manager.dart';
 import 'package:whatsapp_clone_mobile/services/sharedPreferences.dart';
@@ -68,6 +69,12 @@ class GeneralProvider with ChangeNotifier{
     return res;
   }
 
+  Future<bool> login(User user) async {
+    Directory path = await getApplicationDocumentsDirectory();
+    bool success = await user.login(path.path);
+    return success;
+  }
+
   Future<void> refreshContactList() async {
     //TODO: get profile image for new contact
     List<Map> deviceContacts = await _contactManager.getAllContacts();
@@ -101,9 +108,8 @@ class GeneralProvider with ChangeNotifier{
         contact.haveProfilePicture = registeredUser['haveProfilePicture'];
 
         if(contact.haveProfilePicture){
-          List<int> pictureBytes = List<int>.from(registeredUser['profilePicture']);
-          File picture = await File('${_path.path}/${contact.phoneNumber}_profile_picture').writeAsBytes(pictureBytes);
-          contact.profilePicture = picture;
+          String imageName = '${contact.phoneNumber}_profile_picture';
+          contact.profilePicture = await fileManager.saveByteImage(registeredUser['profilePicture'], imageName);
         }
         _contacts.add(contact);
         contact.save();
