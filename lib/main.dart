@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_clone_mobile/route_generator.dart';
 import 'package:whatsapp_clone_mobile/screens/login_screen.dart';
 import 'package:whatsapp_clone_mobile/screens/main_screen.dart';
+import 'package:whatsapp_clone_mobile/services/fcm.dart';
 import 'package:whatsapp_clone_mobile/services/file_manager.dart';
 import 'package:whatsapp_clone_mobile/services/local_database_manager.dart';
 import 'package:whatsapp_clone_mobile/services/sharedPreferences.dart';
@@ -18,6 +19,7 @@ void main() async {
   await Permission.contacts.request();
   await Firebase.initializeApp();
   await fileManager.init();
+  await fcmManager.init();
   SharedPreferences pref = await getPreference();
   runApp(MyApp(pref: pref,));
 }

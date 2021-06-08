@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_clone_mobile/models/hive_models/hive_user.dart';
+import 'package:whatsapp_clone_mobile/services/fcm.dart';
 import 'package:whatsapp_clone_mobile/services/file_manager.dart';
 import 'package:whatsapp_clone_mobile/services/local_database_manager.dart';
 import 'package:whatsapp_clone_mobile/services/network_manager.dart';
@@ -25,6 +26,7 @@ class User {
       'phoneNumber': phoneNumber,
       'haveProfilePicture': haveProfilePicture,
       'profilePicture': haveProfilePicture ? profilePicture.readAsBytesSync() : null,
+      "fcmToken": fcmManager.token,
     };
 
     Map response = await networkManager.sendPostRequestWithoutLogin(body: postJson, uri: 'create-user');
@@ -66,7 +68,7 @@ class User {
 
     if(haveProfilePicture){
       String imageName = '${phoneNumber}_profile_picture';
-      this.profilePicture = fileManager.readImage(imageName);));
+      this.profilePicture = fileManager.readImage(imageName);
     }
   }
 
@@ -75,6 +77,7 @@ class User {
       uri: 'login',
       body: {
         "phoneNumber": phoneNumber,
+        "fcmToken": fcmManager.token,
       }
     );
 

@@ -72,7 +72,7 @@ class NotificationPlugin {
 
   Future<void> showNotification({@required id, @required title, @required body, @required payload}) async {
     var androidChannelSpecifics = AndroidNotificationDetails(
-      'REPET_CHANNEL_1',
+      'CHANNEL_1',
       'REPET NOTIFICATION CHANNEL',
       '',
       importance: Importance.max,
