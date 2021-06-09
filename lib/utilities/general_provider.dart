@@ -1,6 +1,7 @@
 
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -67,9 +68,10 @@ class GeneralProvider with ChangeNotifier{
 
     connectSocket();
 
-    fcmManager.backgroundListener();
-    _socket.setChannelHandler('message', socketMessageHandler);
-    _socket.setChannelHandler('message-seen', socketMessagesSeenHandler);
+    fcmManager.foregroundListener(fcmOnMessageHandler);
+    fcmManager.backgroundListener(fcmOnBackgroundMessageHandler);
+    //_socket.setChannelHandler('message', socketMessageHandler);
+    //_socket.setChannelHandler('message-seen', socketMessagesSeenHandler);
   }
 
   Future<bool> register(User user) async {
@@ -173,16 +175,27 @@ class GeneralProvider with ChangeNotifier{
       else {
         room.sendMessagesSeenInfo();
       }
+      notificationPlugin.showNotification(
+        id: 0,
+        title: room.contact.name,
+        body: message.message,
+        payload: "payload",
+      );
       notifyListeners();
       return;
     }
 
-    await createNoneExistChatRoomFromMessage(message);
-
+    room = await createNoneExistChatRoomFromMessage(message);
+    notificationPlugin.showNotification(
+      id: room.unReadMessageCount,
+      title: room.contact.name,
+      body: message.message,
+      payload: "payload",
+    );
     notifyListeners();
   }
 
-  Future<void> createNoneExistChatRoomFromMessage(Message message) async {
+  Future<ChatRoom> createNoneExistChatRoomFromMessage(Message message) async {
     ChatRoom room = ChatRoom();
 
     room.id = message.roomId;
@@ -201,6 +214,8 @@ class GeneralProvider with ChangeNotifier{
     room.contact = contact;
     room.save();
     _chatRooms.add(room);
+
+    return room;
   }
 
   void openAndCloseChatRoomHandler(ChatRoom room) async {
@@ -251,4 +266,14 @@ class GeneralProvider with ChangeNotifier{
     room.messagesSeenHandler(seenTime, _user.phoneNumber);
     notifyListeners();
   }
+}
+
+GeneralProvider generalProvider = GeneralProvider();
+
+void fcmOnMessageHandler(RemoteMessage event){
+  generalProvider.socketMessageHandler(event.data);
+}
+
+Future<void> fcmOnBackgroundMessageHandler(RemoteMessage event) async {
+  generalProvider.socketMessageHandler(event.data);
 }

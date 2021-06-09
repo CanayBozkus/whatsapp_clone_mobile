@@ -106,6 +106,11 @@ class Contact {
       }
     );
 
+    if(!res['success']){
+      print(res);
+      return null;
+    }
+
     Contact contact = Contact();
     contact.phoneNumber = phoneNumber;
     contact.name = phoneNumber;

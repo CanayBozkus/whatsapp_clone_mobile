@@ -12,14 +12,17 @@ class FCM {
   
   String get token => _token;
 
-  backgroundListener(){
-
+  backgroundListener(Function handler){
     FirebaseMessaging.onBackgroundMessage(handler);
+  }
+  
+  foregroundListener(Function handler){
+    FirebaseMessaging.onMessage.listen(handler);
   }
 }
 
-Future<void> handler (event) async {
-  print(event);
+Future<void> fcmMessageHandler (RemoteMessage event) async {
+  print(event.data);
   notificationPlugin.showNotification(id: 0, title: 'message', body: "body", payload: "payload");
 }
 

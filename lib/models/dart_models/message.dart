@@ -9,7 +9,7 @@ class Message {
   static Message getMessageFromSocketData(data){
     Message message = Message();
     message.roomId = data['roomId'];
-    message.from = data['from'];
+    message.from = data['fromUser'];
     message.sendTime = DateTime.parse(data['sendTime']);
     message.message = data['message'];
 
