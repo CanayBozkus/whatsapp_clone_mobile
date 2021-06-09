@@ -1,9 +1,7 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:whatsapp_clone_mobile/screens/contacts_screen.dart';
 import 'package:whatsapp_clone_mobile/screens/settings_screen.dart';
-import 'package:whatsapp_clone_mobile/services/notification_plugin.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 import 'package:whatsapp_clone_mobile/widgets/main_screen/main_screen_navigator.dart';
 import 'package:whatsapp_clone_mobile/widgets/main_screen/recent_calls.dart';
@@ -11,6 +9,7 @@ import 'package:whatsapp_clone_mobile/widgets/main_screen/recent_chats.dart';
 import 'package:whatsapp_clone_mobile/widgets/main_screen/recent_statuses.dart';
 import 'package:provider/provider.dart';
 import 'package:whatsapp_clone_mobile/utilities/general_provider.dart';
+
 class MainScreen extends StatefulWidget {
   static const routeName = 'MainScreen';
   const MainScreen({Key key}) : super(key: key);
@@ -36,8 +35,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
-    notificationPlugin.setListenerForLowerVersions(() {});
-    notificationPlugin.setOnNotificationClick((String payload) {});
     _pageController = PageController(
       initialPage: 1,
     );
@@ -83,9 +80,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
               Icons.create,
               size: 22,
             ),
-            onPressed: (){
-              notificationPlugin.showNotification(id: 0, title: "test", body: "body", payload: "payload");
-            },
+            onPressed: (){},
           )
               :
           SizedBox.shrink(),

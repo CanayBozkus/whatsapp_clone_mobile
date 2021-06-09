@@ -10,13 +10,20 @@ import 'package:whatsapp_clone_mobile/models/dart_models/message.dart';
 import 'package:whatsapp_clone_mobile/models/dart_models/user.dart';
 import 'package:whatsapp_clone_mobile/models/hive_models/hive_device.dart';
 import 'package:whatsapp_clone_mobile/services/contact_manager.dart';
+import 'package:whatsapp_clone_mobile/services/fcm.dart';
 import 'package:whatsapp_clone_mobile/services/file_manager.dart';
 import 'package:whatsapp_clone_mobile/services/local_database_manager.dart';
 import 'package:whatsapp_clone_mobile/services/network_manager.dart';
+import 'package:whatsapp_clone_mobile/services/notification_plugin.dart';
 import 'package:whatsapp_clone_mobile/services/sharedPreferences.dart';
 import 'package:whatsapp_clone_mobile/services/socket.dart';
 
 class GeneralProvider with ChangeNotifier{
+  GeneralProvider(){
+    notificationPlugin.setListenerForLowerVersions(() {});
+    notificationPlugin.setOnNotificationClick((String payload) {});
+  }
+
   int _mainScreenIndex = 1;
   bool mainScreenNavigatorClicked = false;
   SocketIO _socket;
@@ -60,6 +67,7 @@ class GeneralProvider with ChangeNotifier{
 
     connectSocket();
 
+    fcmManager.backgroundListener();
     _socket.setChannelHandler('message', socketMessageHandler);
     _socket.setChannelHandler('message-seen', socketMessagesSeenHandler);
   }
