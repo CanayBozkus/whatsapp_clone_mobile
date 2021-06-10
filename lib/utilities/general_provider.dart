@@ -66,7 +66,7 @@ class GeneralProvider with ChangeNotifier{
 
     await refreshContactList();
 
-    connectSocket();
+    resumingAppHandler();
 
     fcmManager.foregroundListener(fcmOnMessageHandler);
     fcmManager.backgroundListener(fcmOnBackgroundMessageHandler);
@@ -161,38 +161,42 @@ class GeneralProvider with ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> socketMessageHandler(data) async {
+  Future<void> receivedMessageHandler(data) async {
     Message message = Message.getMessageFromSocketData(data);
 
     ChatRoom room = _chatRooms.firstWhere((ChatRoom r) => r.id == message.roomId, orElse: () => null);
 
-    if(room != null){
-      room.messages.insert(0, message);
-      room.lastMessage = message;
-      if(_currentChatRoom != room){
-        room.unReadMessageCount++;
-      }
-      else {
-        room.sendMessagesSeenInfo();
-      }
+    if(room == null){
+      room = await createNoneExistChatRoomFromMessage(message);
+      print(_chatRooms.length);
       notificationPlugin.showNotification(
-        id: 0,
+        id: _chatRooms.length,
         title: room.contact.name,
-        body: message.message,
+        body: room.getNotificationBody(_user.phoneNumber),
         payload: "payload",
       );
       notifyListeners();
       return;
     }
 
-    room = await createNoneExistChatRoomFromMessage(message);
-    notificationPlugin.showNotification(
-      id: room.unReadMessageCount,
-      title: room.contact.name,
-      body: message.message,
-      payload: "payload",
-    );
+    room.messages.insert(0, message);
+    room.lastMessage = message;
+
+    if(_currentChatRoom != room){
+      room.unReadMessageCount++;
+      print(_chatRooms.length);
+      notificationPlugin.showNotification(
+        id: _chatRooms.indexOf(room),
+        title: room.contact.name,
+        body: room.getNotificationBody(_user.phoneNumber),
+        payload: "payload",
+      );
+    }
+    else {
+      room.sendMessagesSeenInfo();
+    }
     notifyListeners();
+    return;
   }
 
   Future<ChatRoom> createNoneExistChatRoomFromMessage(Message message) async {
@@ -226,11 +230,13 @@ class GeneralProvider with ChangeNotifier{
     }
 
     if(!_listenedToContacts.contains(room.contact)){
+      room.contact.subscribeStatusChannel();
+      /*
       _socket.setChannelHandler('${room.contact.phoneNumber}-status-channel', (data){
         room.contact.isOnline = data['isOnline'];
         room.contact.lastSeenTime = data['lastSeenTime'] != null ? DateTime.parse(data['lastSeenTime']) : null;
         notifyListeners();
-      });
+      });*/
       await room.contact.checkContactStatus(userPhoneNumber: _user.phoneNumber, callback: () => notifyListeners());
       _listenedToContacts.add(room.contact);
     }
@@ -243,8 +249,29 @@ class GeneralProvider with ChangeNotifier{
     _currentChatRoom = room;
   }
 
-  void disconnectSocket(){
-    _socket.disconnect();
+  void closingAppHandler(){
+    networkManager.sendPostRequestWithLogin(
+      uri: 'disconnect',
+    );
+
+    _listenedToContacts.forEach((Contact contact) {
+      contact.unsubscribeStatusChannel();
+    });
+  }
+
+  void resumingAppHandler() async {
+    networkManager.sendPostRequestWithLogin(
+      body: {
+        "phoneNumber": _user.phoneNumber
+      },
+      uri: 'connect',
+    );
+
+    if(_currentChatRoom != null){
+      await _currentChatRoom.contact.checkContactStatus(userPhoneNumber: _user.phoneNumber, callback: () => notifyListeners());
+      _listenedToContacts.add(_currentChatRoom.contact);
+      _currentChatRoom.contact.subscribeStatusChannel();
+    }
   }
   
   void connectSocket(){
@@ -266,14 +293,35 @@ class GeneralProvider with ChangeNotifier{
     room.messagesSeenHandler(seenTime, _user.phoneNumber);
     notifyListeners();
   }
+  
+  void fcmForegroundHandler(RemoteMessage event){
+    if(event.from.contains('topics')){
+      String topic = event.from.substring('/topics/'.length);
+
+      if(topic.contains('status-channel')){
+        Contact contact = _listenedToContacts.firstWhere((Contact e) => e.statusChannel == topic);
+        contact.isOnline = event.data['isOnline'] == 'true';
+        contact.lastSeenTime = event.data.keys.contains('lastSeenTime')  ? DateTime.parse(event.data['lastSeenTime']) : null;
+        notifyListeners();
+      }
+
+      return;
+    }
+
+    receivedMessageHandler(event.data);
+  }
+  
+  void fcmBackgroundHandler(RemoteMessage event){
+    generalProvider.receivedMessageHandler(event.data);
+  }
 }
 
 GeneralProvider generalProvider = GeneralProvider();
 
 void fcmOnMessageHandler(RemoteMessage event){
-  generalProvider.socketMessageHandler(event.data);
+  generalProvider.fcmForegroundHandler(event);
 }
 
 Future<void> fcmOnBackgroundMessageHandler(RemoteMessage event) async {
-  generalProvider.socketMessageHandler(event.data);
+  generalProvider.fcmBackgroundHandler(event);
 }

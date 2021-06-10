@@ -19,6 +19,14 @@ class FCM {
   foregroundListener(Function handler){
     FirebaseMessaging.onMessage.listen(handler);
   }
+
+  subscribe(String topic){
+    _messaging.subscribeToTopic(topic);
+  }
+
+  unsubscribe(String topic){
+    _messaging.unsubscribeFromTopic(topic);
+  }
 }
 
 Future<void> fcmMessageHandler (RemoteMessage event) async {

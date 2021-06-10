@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:whatsapp_clone_mobile/models/hive_models/hive_contact.dart';
+import 'package:whatsapp_clone_mobile/services/fcm.dart';
 import 'package:whatsapp_clone_mobile/services/file_manager.dart';
 import 'package:whatsapp_clone_mobile/services/local_database_manager.dart';
 import 'package:whatsapp_clone_mobile/services/network_manager.dart';
@@ -14,6 +15,7 @@ class Contact {
   bool haveProfilePicture = false;
   bool isOnline = false;
   DateTime lastSeenTime;
+  String statusChannel = '';
   
   void save(){
     localDatabaseManager.saveContact(this);
@@ -141,5 +143,14 @@ class Contact {
     if(callback != null){
       callback();
     }
+  }
+  
+  void subscribeStatusChannel(){
+    statusChannel = 'status-channel-$phoneNumber';
+    fcmManager.subscribe(statusChannel);
+  }
+
+  void unsubscribeStatusChannel(){
+    fcmManager.unsubscribe(statusChannel);
   }
 }

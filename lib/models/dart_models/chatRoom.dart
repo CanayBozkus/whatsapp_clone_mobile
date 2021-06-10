@@ -58,4 +58,16 @@ class ChatRoom {
       }
     }
   }
+
+  String getNotificationBody(String userPhoneNumber){
+    List<String> unreadMessages = [];
+
+    for(int i = 0; i < unReadMessageCount; i++){
+      unreadMessages.add(messages[i].message);
+    }
+
+    unreadMessages = unreadMessages.reversed.toList();
+
+    return unreadMessages.join('\n');
+  }
 }

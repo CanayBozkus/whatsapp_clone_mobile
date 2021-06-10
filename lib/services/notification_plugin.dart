@@ -72,12 +72,13 @@ class NotificationPlugin {
 
   Future<void> showNotification({@required id, @required title, @required body, @required payload}) async {
     var androidChannelSpecifics = AndroidNotificationDetails(
-      'CHANNEL_1',
+      'CHANNEL_2',
       'REPET NOTIFICATION CHANNEL',
       '',
       importance: Importance.max,
       priority: Priority.high,
       icon: 'notf_icon',
+      styleInformation: BigTextStyleInformation(''),
     );
     var iosChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(android: androidChannelSpecifics, iOS: iosChannelSpecifics);
