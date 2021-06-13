@@ -40,6 +40,17 @@ class MessageBubble extends StatelessWidget {
         ],
       );
     }
+    else if(!message.isReceived){
+      return Row(
+        children: [
+          Icon(
+            Icons.check,
+            color: Colors.grey,
+            size: 18,
+          ),
+        ],
+      );
+    }
     else{
       return Row(
         children: [

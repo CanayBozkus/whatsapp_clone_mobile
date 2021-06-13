@@ -5,6 +5,8 @@ class Message {
   String from;
   bool isSeen = false;
   bool isSent = false;
+  bool isReceived = false;
+  List receivers = [];
 
   static Message getMessageFromSocketData(data){
     Message message = Message();

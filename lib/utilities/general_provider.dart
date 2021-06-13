@@ -169,19 +169,20 @@ class GeneralProvider with ChangeNotifier{
 
     if(room == null){
       room = await createNoneExistChatRoomFromMessage(message);
-      print(_chatRooms.length);
       notificationPlugin.showNotification(
         id: _chatRooms.length,
         title: room.contact.name,
         body: room.getNotificationBody(_user.phoneNumber),
         payload: "payload",
       );
+      room.sendMessageReceivedInfo(userPhoneNumber: _user.phoneNumber);
       notifyListeners();
       return;
     }
 
     room.messages.insert(0, message);
     room.lastMessage = message;
+    room.sendMessageReceivedInfo(userPhoneNumber: _user.phoneNumber);
 
     if(_currentChatRoom != room){
       room.unReadMessageCount++;
@@ -294,6 +295,18 @@ class GeneralProvider with ChangeNotifier{
     room.messagesSeenHandler(seenTime, _user.phoneNumber);
     notifyListeners();
   }
+
+  void sentMessagesReceivedHandler(data){
+    DateTime receivedTime = DateTime.parse(data['receivedTime']);
+    String roomId = data['roomId'];
+    String receiverPhoneNumber = data['messageReceiverPhoneNumber'];
+
+    ChatRoom room = _chatRooms.firstWhere((ChatRoom e) => e.id == roomId, orElse: () => null);
+
+    if(room == null) return;
+    room.messagesReceivedHandler(receivedTime, _user.phoneNumber, receiverPhoneNumber);
+    notifyListeners();
+  }
   
   void fcmForegroundHandler(RemoteMessage event){
     if(event.from.contains('topics')){
@@ -318,6 +331,9 @@ class GeneralProvider with ChangeNotifier{
         return;
       case FCMTypes.messageSeen:
         messagesSeenHandler(event.data);
+        return;
+      case FCMTypes.messageReceived:
+        sentMessagesReceivedHandler(event.data);
         return;
       default:
         return;

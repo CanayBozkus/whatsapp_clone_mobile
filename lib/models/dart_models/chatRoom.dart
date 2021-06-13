@@ -70,4 +70,31 @@ class ChatRoom {
 
     return unreadMessages.join('\n');
   }
+
+  Future<void> sendMessageReceivedInfo({String userPhoneNumber}) async {
+    Map response = await networkManager.sendPostRequestWithLogin(
+        uri: 'send-messages-received-info',
+        body: {
+          'receivedTime': DateTime.now().toIso8601String(),
+          'roomId': id,
+          'messageOwnerPhoneNumber': lastMessage.from,
+          'messageReceiverPhoneNumber': userPhoneNumber
+        }
+    );
+  }
+
+  void messagesReceivedHandler(DateTime receivedTime, String userPhoneNumber, String receiverPhoneNumber){
+    for(Message message in messages){
+      //TODO: sendTime gives 2 second error
+
+      if(message.from == userPhoneNumber && !message.isReceived && message.sendTime.isBefore(receivedTime.add(Duration(seconds: 2, milliseconds: 1)))){
+        message.isReceived = true;
+        message.receivers.add(receiverPhoneNumber);
+        message.save();
+      }
+      else if(message.from == userPhoneNumber && message.isReceived){
+        break;
+      }
+    }
+  }
 }

@@ -62,7 +62,8 @@ class Constant{
 
   static const fcmTypesMatches = {
     "0": FCMTypes.message,
-    "1": FCMTypes.messageSeen
+    "1": FCMTypes.messageSeen,
+    '2': FCMTypes.messageReceived
   };
 }
 
@@ -94,5 +95,6 @@ enum ShowLastSeenTypes {
 
 enum FCMTypes {
   message,
-  messageSeen
+  messageSeen,
+  messageReceived
 }
