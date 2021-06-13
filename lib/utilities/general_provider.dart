@@ -18,6 +18,7 @@ import 'package:whatsapp_clone_mobile/services/network_manager.dart';
 import 'package:whatsapp_clone_mobile/services/notification_plugin.dart';
 import 'package:whatsapp_clone_mobile/services/sharedPreferences.dart';
 import 'package:whatsapp_clone_mobile/services/socket.dart';
+import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 
 class GeneralProvider with ChangeNotifier{
   GeneralProvider(){
@@ -283,7 +284,7 @@ class GeneralProvider with ChangeNotifier{
     _socket.connect((){});
   }
 
-  void socketMessagesSeenHandler(data) async {
+  void messagesSeenHandler(data) async {
     DateTime seenTime = DateTime.parse(data['seenTime']);
     String roomId = data['roomId'];
 
@@ -308,7 +309,19 @@ class GeneralProvider with ChangeNotifier{
       return;
     }
 
-    receivedMessageHandler(event.data);
+    String typeNumber = event.data['type'];
+    FCMTypes type = Constant.fcmTypesMatches[typeNumber];
+
+    switch(type){
+      case FCMTypes.message:
+        receivedMessageHandler(event.data);
+        return;
+      case FCMTypes.messageSeen:
+        messagesSeenHandler(event.data);
+        return;
+      default:
+        return;
+    }
   }
   
   void fcmBackgroundHandler(RemoteMessage event){

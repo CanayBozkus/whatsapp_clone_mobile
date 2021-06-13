@@ -59,6 +59,11 @@ class Constant{
     1: ShowLastSeenTypes.contacts,
     2: ShowLastSeenTypes.nobody,
   };
+
+  static const fcmTypesMatches = {
+    "0": FCMTypes.message,
+    "1": FCMTypes.messageSeen
+  };
 }
 
 enum MainScreenDropdown {
@@ -87,3 +92,7 @@ enum ShowLastSeenTypes {
   contacts,
 }
 
+enum FCMTypes {
+  message,
+  messageSeen
+}
