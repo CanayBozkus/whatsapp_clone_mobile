@@ -20,7 +20,7 @@ class User {
   bool haveProfilePicture = false;
 
   Future<bool> register() async {
-
+    /*
     Map postJson = {
       'name': name,
       'phoneNumber': phoneNumber,
@@ -28,8 +28,29 @@ class User {
       'profilePicture': haveProfilePicture ? profilePicture.readAsBytesSync() : null,
       "fcmToken": fcmManager.token,
     };
+    */
+    Map fields = {
+      'name': name,
+      'phoneNumber': phoneNumber,
+      'haveProfilePicture': haveProfilePicture.toString(),
+      "fcmToken": fcmManager.token,
+    };
 
-    Map response = await networkManager.sendPostRequestWithoutLogin(body: postJson, uri: 'create-user');
+    List files = [
+      {
+        'file': {
+          'profilePicture': profilePicture
+        },
+        'type': 'image',
+        'subType': 'jpg'
+      }
+    ];
+
+    Map body = {};
+    body['fields'] = fields;
+    haveProfilePicture ? body['files'] = files : null;
+
+    Map response = await networkManager.sendPostMultipartRequestWithoutLogin(body: body, uri: 'create-user');
 
     if(response['success']){
       id = response['id'];
@@ -73,7 +94,7 @@ class User {
   }
 
   Future<bool> login(String path) async {
-    Map res = await networkManager.sendPostRequestWithoutLogin(
+    Map res = await networkManager.sendPostJSONRequestWithoutLogin(
       uri: 'login',
       body: {
         "phoneNumber": phoneNumber,

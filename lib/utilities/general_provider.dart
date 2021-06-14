@@ -252,7 +252,7 @@ class GeneralProvider with ChangeNotifier{
   }
 
   void closingAppHandler(){
-    networkManager.sendPostRequestWithLogin(
+    networkManager.sendPostJSONRequestWithLogin(
       uri: 'disconnect',
     );
 
@@ -262,7 +262,7 @@ class GeneralProvider with ChangeNotifier{
   }
 
   void resumingAppHandler() async {
-    networkManager.sendPostRequestWithLogin(
+    networkManager.sendPostJSONRequestWithLogin(
       body: {
         "phoneNumber": _user.phoneNumber
       },

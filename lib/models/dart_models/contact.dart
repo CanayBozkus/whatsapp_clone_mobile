@@ -48,7 +48,7 @@ class Contact {
       'removedContactsPhoneNumber': removedContactsPhoneNumber,
     };
 
-    Map response = await networkManager.sendPostRequestWithLogin(body: postJson, uri: 'check-and-update-contact-list');
+    Map response = await networkManager.sendPostJSONRequestWithLogin(body: postJson, uri: 'check-and-update-contact-list');
 
     if(response['success']){
       return response['registeredUsers'];
@@ -100,7 +100,7 @@ class Contact {
   }
 
   static Future<Contact> getAndSaveUnlistedContactDataFromCloud({String phoneNumber, String path, String userPhoneNumber}) async {
-    Map res = await networkManager.sendGetRequestWithLogin(
+    Map res = await networkManager.sendGetJSONRequestWithLogin(
       uri: 'get-unlisted-contact-data',
       query: {
         'phoneNumber': phoneNumber,
@@ -130,7 +130,7 @@ class Contact {
   }
 
   Future<void> checkContactStatus({String userPhoneNumber, Function callback}) async {
-    Map res = await networkManager.sendGetRequestWithLogin(
+    Map res = await networkManager.sendGetJSONRequestWithLogin(
         uri: 'check-contact-status',
         query: {
           'phoneNumber': phoneNumber,

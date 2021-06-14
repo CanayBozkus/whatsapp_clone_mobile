@@ -21,7 +21,7 @@ class ChatRoom {
       'from': message.from,
       'membersPhoneNumber': membersPhoneNumber
     };
-    Map response = await networkManager.sendPostRequestWithLogin(body: postJson, uri: 'send-message');
+    Map response = await networkManager.sendPostJSONRequestWithLogin(body: postJson, uri: 'send-message');
 
     if(response['success']){
       message.isSent = true;
@@ -35,7 +35,7 @@ class ChatRoom {
   }
 
   Future<void> sendMessagesSeenInfo() async {
-    Map response = await networkManager.sendPostRequestWithLogin(
+    Map response = await networkManager.sendPostJSONRequestWithLogin(
       uri: 'send-messages-seen-info',
       body: {
         'seenTime': DateTime.now().toIso8601String(),
@@ -72,7 +72,7 @@ class ChatRoom {
   }
 
   Future<void> sendMessageReceivedInfo({String userPhoneNumber}) async {
-    Map response = await networkManager.sendPostRequestWithLogin(
+    Map response = await networkManager.sendPostJSONRequestWithLogin(
         uri: 'send-messages-received-info',
         body: {
           'receivedTime': DateTime.now().toIso8601String(),

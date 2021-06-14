@@ -29,7 +29,7 @@ class SocketIO {
   }
 
   disconnect() async {
-    networkManager.sendPostRequestWithLogin(
+    networkManager.sendPostJSONRequestWithLogin(
       uri: 'disconnect',
     );
     this._socket.disconnect();
