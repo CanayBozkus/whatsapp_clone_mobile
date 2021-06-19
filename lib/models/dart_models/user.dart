@@ -5,7 +5,8 @@ import 'package:whatsapp_clone_mobile/models/hive_models/hive_user.dart';
 import 'package:whatsapp_clone_mobile/services/fcm.dart';
 import 'package:whatsapp_clone_mobile/services/file_manager.dart';
 import 'package:whatsapp_clone_mobile/services/local_database_manager.dart';
-import 'package:whatsapp_clone_mobile/services/network_manager.dart';
+import 'package:whatsapp_clone_mobile/services/network/multipart_data.dart';
+import 'package:whatsapp_clone_mobile/services/network/network_manager.dart';
 import 'package:whatsapp_clone_mobile/services/sharedPreferences.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 
@@ -20,15 +21,7 @@ class User {
   bool haveProfilePicture = false;
 
   Future<bool> register() async {
-    /*
-    Map postJson = {
-      'name': name,
-      'phoneNumber': phoneNumber,
-      'haveProfilePicture': haveProfilePicture,
-      'profilePicture': haveProfilePicture ? profilePicture.readAsBytesSync() : null,
-      "fcmToken": fcmManager.token,
-    };
-    */
+    MultipartData data = MultipartData();
     Map fields = {
       'name': name,
       'phoneNumber': phoneNumber,
@@ -36,21 +29,16 @@ class User {
       "fcmToken": fcmManager.token,
     };
 
-    List files = [
-      {
-        'file': {
-          'profilePicture': profilePicture
-        },
-        'type': 'image',
-        'subType': 'jpg'
-      }
-    ];
+    data.addFieldsWithMap(fields);
 
-    Map body = {};
-    body['fields'] = fields;
-    haveProfilePicture ? body['files'] = files : null;
+    data.addFile(
+      key: 'profilePicture',
+      file: profilePicture,
+      type: MultipartFileTypes.image,
+      subtype: MultipartFileSubTypes.jpg,
+    );
 
-    Map response = await networkManager.sendPostMultipartRequestWithoutLogin(body: body, uri: 'create-user');
+    Map response = await networkManager.sendPostMultipartRequestWithoutLogin(multipartData: data, uri: 'create-user');
 
     if(response['success']){
       id = response['id'];

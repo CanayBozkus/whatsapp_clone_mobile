@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:http/http.dart' as http;
-import 'package:whatsapp_clone_mobile/services/network_manager.dart';
+import 'package:whatsapp_clone_mobile/services/network/network_manager.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 
 class SocketIO {

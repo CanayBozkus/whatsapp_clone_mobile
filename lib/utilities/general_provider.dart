@@ -14,7 +14,7 @@ import 'package:whatsapp_clone_mobile/services/contact_manager.dart';
 import 'package:whatsapp_clone_mobile/services/fcm.dart';
 import 'package:whatsapp_clone_mobile/services/file_manager.dart';
 import 'package:whatsapp_clone_mobile/services/local_database_manager.dart';
-import 'package:whatsapp_clone_mobile/services/network_manager.dart';
+import 'package:whatsapp_clone_mobile/services/network/network_manager.dart';
 import 'package:whatsapp_clone_mobile/services/notification_plugin.dart';
 import 'package:whatsapp_clone_mobile/services/sharedPreferences.dart';
 import 'package:whatsapp_clone_mobile/services/socket.dart';

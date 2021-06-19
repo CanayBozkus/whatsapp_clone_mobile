@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:whatsapp_clone_mobile/services/network/multipart_data.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 import 'package:http_parser/http_parser.dart';
 
@@ -56,28 +57,26 @@ class NetworkManager {
     return response;
   }
 
-  Future<Map> sendPostMultipartRequestWithoutLogin({String uri, Map body}) async {
+  Future<Map> sendPostMultipartRequestWithoutLogin({String uri, MultipartData multipartData}) async {
     Uri parsedUri = Uri.http(Constant.serverURI, uri);
     http.MultipartRequest request = new http.MultipartRequest("POST", parsedUri);
+    multipartData.addFieldsToMultipartRequest(request);
 
-    if(body.keys.contains('fields')){
-      for(var key in body['fields'].keys){
-        request.fields[key] = body['fields'][key];
-      }
+    try {
+      http.StreamedResponse streamedResponse = await request.send();
+      http.Response response = await http.Response.fromStream(streamedResponse);
+      return jsonDecode(response.body);
+    } catch (e) {
+      return {};
     }
+  }
 
-    if(body.keys.contains('files')){
-      for(var file in body['files']){
-        String key = file['file'].keys.first;
-        request.files.add(
-            await http.MultipartFile.fromPath(
-              key,
-              file['file'][key].path,
-              contentType: MediaType(file['type'], file['subType'])
-            )
-        );
-      }
-    }
+  Future<Map> sendPostMultipartRequestWithLogin({String uri, MultipartData multipartData}) async {
+    Uri parsedUri = Uri.http(Constant.serverURI, uri);
+    http.MultipartRequest request = new http.MultipartRequest("POST", parsedUri);
+    multipartData.addFieldsToMultipartRequest(request);
+
+    request.headers['Authorization'] = 'Bearer $_jwt';
     try {
       http.StreamedResponse streamedResponse = await request.send();
       http.Response response = await http.Response.fromStream(streamedResponse);

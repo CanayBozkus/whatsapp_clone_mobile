@@ -1,6 +1,6 @@
 import 'package:whatsapp_clone_mobile/models/dart_models/contact.dart';
 import 'package:whatsapp_clone_mobile/models/dart_models/message.dart';
-import 'package:whatsapp_clone_mobile/services/network_manager.dart';
+import 'package:whatsapp_clone_mobile/services/network/network_manager.dart';
 
 
 class ChatRoom {

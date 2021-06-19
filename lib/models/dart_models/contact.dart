@@ -3,7 +3,7 @@ import 'package:whatsapp_clone_mobile/models/hive_models/hive_contact.dart';
 import 'package:whatsapp_clone_mobile/services/fcm.dart';
 import 'package:whatsapp_clone_mobile/services/file_manager.dart';
 import 'package:whatsapp_clone_mobile/services/local_database_manager.dart';
-import 'package:whatsapp_clone_mobile/services/network_manager.dart';
+import 'package:whatsapp_clone_mobile/services/network/network_manager.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 
 class Contact {
