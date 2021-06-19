@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:whatsapp_clone_mobile/screens/contacts_screen.dart';
 import 'package:whatsapp_clone_mobile/screens/settings_screen.dart';
+import 'package:whatsapp_clone_mobile/screens/take_picture_screen.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 import 'package:whatsapp_clone_mobile/widgets/main_screen/main_screen_navigator.dart';
 import 'package:whatsapp_clone_mobile/widgets/main_screen/recent_calls.dart';
@@ -21,6 +22,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   PageController _pageController;
   int _currentPageIndex;
+  bool showAppBar = true;
 
   IconData getFloatingActionButtonIcon(){
     switch(_currentPageIndex){
@@ -103,7 +105,9 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
         ],
       )
           : SizedBox.shrink(),
-      appBar: AppBar(
+      appBar: showAppBar
+          ?
+      AppBar(
         backgroundColor: Constant.primaryColor,
         elevation: 0,
         title: Text(
@@ -156,10 +160,16 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
             ),
           ),
         ],
-      ),
+      )
+          :
+      null,
       body: Column(
         children: [
-          MainScreenNavigator(controller: _pageController,),
+          showAppBar
+              ?
+          MainScreenNavigator(controller: _pageController,)
+              :
+          SizedBox.shrink(),
           Expanded(
             child: PageView(
               controller: _pageController,
@@ -167,11 +177,18 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                 if(!context.read<GeneralProvider>().mainScreenNavigatorClicked){
                   context.read<GeneralProvider>().mainScreenIndex = index;
                 }
+                setState(() {
+                  if(index == 0){
+                    showAppBar = false;
+
+                  }
+                  else {
+                    showAppBar = true;
+                  }
+                });
               },
               children: [
-                Container(
-                  child: Text('camera'),
-                ),
+                TakePictureScreen(),
                 RecentChats(),
                 RecentStatuses(),
                 RecentCalls(),
