@@ -104,7 +104,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   icon: Icon(Icons.send, color: Colors.white,),
                                   onPressed: () async {
                                     _formKey.currentState.save();
-                                    if(message.message.isEmpty){
+                                    if(message.message.isEmpty && message.file == null){
                                       return;
                                     }
                                     _formKey.currentState.reset();
@@ -127,7 +127,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   left: 0,
                   child: SizedBox(
                     height: showAttachmentModal ? null : 0,
-                    child: AttachmentModal(),
+                    child: AttachmentModal(message: message, cb: closeAttachmentModal,),
                   ),
                 ),
               ],

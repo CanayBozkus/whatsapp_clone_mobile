@@ -155,10 +155,7 @@ class GeneralProvider with ChangeNotifier{
 
     bool success = await room.sendMessage(message);
 
-    if(!_chatRooms.contains(room)){
-      _chatRooms.add(room);
-      room.save();
-    }
+    room.save();
     notifyListeners();
   }
 

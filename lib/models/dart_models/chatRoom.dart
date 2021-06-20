@@ -1,5 +1,7 @@
 import 'package:whatsapp_clone_mobile/models/dart_models/contact.dart';
 import 'package:whatsapp_clone_mobile/models/dart_models/message.dart';
+import 'package:whatsapp_clone_mobile/services/file_manager.dart';
+import 'package:whatsapp_clone_mobile/services/network/multipart_data.dart';
 import 'package:whatsapp_clone_mobile/services/network/network_manager.dart';
 
 
@@ -14,15 +16,36 @@ class ChatRoom {
   List<String> membersPhoneNumber = [];
 
   Future<bool> sendMessage(Message message) async {
-    Map postJson = {
+    String uri = 'send-message';
+    Map fields = {
       'message': message.message,
       'roomId': message.roomId,
       'sendTime': message.sendTime.toIso8601String(),
       'from': message.from,
       'membersPhoneNumber': membersPhoneNumber
     };
-    Map response = await networkManager.sendPostJSONRequestWithLogin(body: postJson, uri: 'send-message');
+    Map response;
 
+    if(message.file != null){
+      message.file = await fileManager.copyImageToExternalStorage(message.file, 'Whatsapp-Clone-${DateTime.now()}');
+      message.fileLocation = message.file.path;
+
+      MultipartData data = MultipartData();
+      fields['haveFile'] = 'true';
+      data.addFieldsWithMap(fields);
+      data.addFile(
+        key: 'imageFile',
+        file: message.file,
+        type: MultipartFileTypes.image,
+        subtype: MultipartFileSubTypes.jpg,
+      );
+
+      response = await networkManager.sendPostMultipartRequestWithLogin(uri: uri, multipartData: data);
+    }
+    else {
+      response = await networkManager.sendPostJSONRequestWithLogin(body: fields, uri: uri);
+    }
+print(response);
     if(response['success']){
       message.isSent = true;
     }

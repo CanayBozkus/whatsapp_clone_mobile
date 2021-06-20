@@ -20,7 +20,7 @@ class MultipartData {
 
   void addFieldsWithMap(Map map){
     map.keys.forEach((key) {
-      _files[key] = map[key];
+      _fields[key] = map[key];
     });
   }
 
@@ -39,16 +39,17 @@ class MultipartData {
     }
 
     _fields.keys.forEach((key) {
-      request.fields[key] = _fields[key];
+      request.fields[key] = _fields[key].toString();
     });
 
     for(Map fileData in _files){
       String key = fileData['file'].keys.first;
+      print(fileData['type']);
       request.files.add(
           await http.MultipartFile.fromPath(
               key,
               fileData['file'][key].path,
-              contentType: MediaType(fileData['type'], fileData['subType'])
+              contentType: MediaType(fileData['type'].toString(), fileData['subType'].toString())
           )
       );
     }

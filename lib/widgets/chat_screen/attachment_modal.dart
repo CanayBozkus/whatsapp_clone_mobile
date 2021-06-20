@@ -1,7 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:whatsapp_clone_mobile/models/dart_models/message.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 
 class AttachmentModal extends StatelessWidget {
+  AttachmentModal({@required this.message, this.cb});
+  final Message message;
+  final Function cb;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -56,7 +63,18 @@ class AttachmentModal extends StatelessWidget {
                   color: Colors.pinkAccent,
                   shape: CircleBorder(),
                   child: InkWell(
-                    onTap: (){},
+                    onTap: () async {
+                      final picker = ImagePicker();
+                      final pickedFile = await picker.getImage(source: ImageSource.gallery);
+                      if(pickedFile == null){
+                        return;
+                      }
+
+                      message.file = File(pickedFile.path);
+                      if(cb != null){
+                        cb();
+                      }
+                    },
                     child: Padding(
                       padding: EdgeInsets.all(16),
                       child: Icon(

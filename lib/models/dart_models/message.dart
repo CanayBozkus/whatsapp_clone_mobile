@@ -1,5 +1,7 @@
+import 'dart:io';
+
 class Message {
-  String message;
+  String message = '';
   String roomId;
   DateTime sendTime = DateTime.now();
   String from;
@@ -7,6 +9,8 @@ class Message {
   bool isSent = false;
   bool isReceived = false;
   List receivers = [];
+  File file;
+  String fileLocation;
 
   static Message getMessageFromSocketData(data){
     Message message = Message();

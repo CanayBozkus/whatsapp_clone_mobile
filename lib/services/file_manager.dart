@@ -4,9 +4,11 @@ import 'package:path_provider/path_provider.dart';
 
 class FileManager {
   Directory _path;
+  Directory _externalStorage;
 
   init() async {
     _path = await getApplicationDocumentsDirectory();
+    _externalStorage = await getExternalStorageDirectory();
   }
 
   Future<void> saveImage(File file, String name) async {
@@ -37,6 +39,12 @@ class FileManager {
     List<int> pictureBytes = List<int>.from(imageByteList);
     File picture = await File('${_path.path}/$name.jpg').writeAsBytes(pictureBytes);
     return picture;
+  }
+
+  Future<File> copyImageToExternalStorage(File file, String name) async {
+    List<int> bytes = file.readAsBytesSync().toList();
+    return await File('${_externalStorage.path}/Pictures/$name').writeAsBytes(bytes);
+    //await file.copy('${_externalStorage.path}/Pictures/$name');
   }
 }
 
