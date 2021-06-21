@@ -5,7 +5,7 @@ import 'package:whatsapp_clone_mobile/models/hive_models/hive_user.dart';
 import 'package:whatsapp_clone_mobile/services/fcm.dart';
 import 'package:whatsapp_clone_mobile/services/file_manager.dart';
 import 'package:whatsapp_clone_mobile/services/local_database_manager.dart';
-import 'package:whatsapp_clone_mobile/services/network/multipart_data.dart';
+import 'package:whatsapp_clone_mobile/services/network/http_request_data.dart';
 import 'package:whatsapp_clone_mobile/services/network/network_manager.dart';
 import 'package:whatsapp_clone_mobile/services/sharedPreferences.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
@@ -21,7 +21,7 @@ class User {
   bool haveProfilePicture = false;
 
   Future<bool> register() async {
-    MultipartData data = MultipartData();
+    HttpRequestData data = HttpRequestData();
     Map fields = {
       'name': name,
       'phoneNumber': phoneNumber,
@@ -38,7 +38,7 @@ class User {
       subtype: MultipartFileSubTypes.jpg,
     );
 
-    Map response = await networkManager.sendPostMultipartRequestWithoutLogin(multipartData: data, uri: 'create-user');
+    Map response = await networkManager.sendPostRequest(requestData: data, uri: 'create-user', login: false);
 
     if(response['success']){
       id = response['id'];
@@ -82,12 +82,16 @@ class User {
   }
 
   Future<bool> login(String path) async {
-    Map res = await networkManager.sendPostJSONRequestWithoutLogin(
+    Map fields = {
+      "phoneNumber": phoneNumber,
+      "fcmToken": fcmManager.token,
+    };
+    HttpRequestData data = HttpRequestData();
+    data.addFieldsWithMap(fields);
+    Map res = await networkManager.sendPostRequest(
       uri: 'login',
-      body: {
-        "phoneNumber": phoneNumber,
-        "fcmToken": fcmManager.token,
-      }
+      login: false,
+      requestData: data
     );
 
     if(res['success']){

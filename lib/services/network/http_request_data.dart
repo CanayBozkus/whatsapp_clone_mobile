@@ -4,15 +4,19 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
-class MultipartData {
+class HttpRequestData {
   Map _fields = {};
   List _files = [];
+  bool _hasFiles = false;
+
   Map _multipartFileTypesMap = {
     MultipartFileTypes.image: 'image',
   };
   Map _multipartFileSubTypesMap = {
     MultipartFileSubTypes.jpg: 'jpg'
   };
+
+  bool get hasFiles => _hasFiles;
 
   void addField({@required String key, @required String field}){
     _fields[key] = field;
@@ -52,6 +56,10 @@ class MultipartData {
           )
       );
     }
+  }
+
+  Map getJsonBody(){
+    return _fields;
   }
 }
 

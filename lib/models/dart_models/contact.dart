@@ -3,6 +3,7 @@ import 'package:whatsapp_clone_mobile/models/hive_models/hive_contact.dart';
 import 'package:whatsapp_clone_mobile/services/fcm.dart';
 import 'package:whatsapp_clone_mobile/services/file_manager.dart';
 import 'package:whatsapp_clone_mobile/services/local_database_manager.dart';
+import 'package:whatsapp_clone_mobile/services/network/http_request_data.dart';
 import 'package:whatsapp_clone_mobile/services/network/network_manager.dart';
 import 'package:whatsapp_clone_mobile/utilities/constants.dart';
 
@@ -47,8 +48,9 @@ class Contact {
       'newContactsPhoneNumber': newContactsPhoneNumber,
       'removedContactsPhoneNumber': removedContactsPhoneNumber,
     };
-
-    Map response = await networkManager.sendPostJSONRequestWithLogin(body: postJson, uri: 'check-and-update-contact-list');
+    HttpRequestData data = HttpRequestData();
+    data.addFieldsWithMap(postJson);
+    Map response = await networkManager.sendPostRequest(requestData: data, uri: 'check-and-update-contact-list');
 
     if(response['success']){
       return response['registeredUsers'];

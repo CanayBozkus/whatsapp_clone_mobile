@@ -27,13 +27,13 @@ class SocketIO {
     this._socket.onDisconnect((data) => print('disconnected'));
     this._socket.connect();
   }
-
+/*
   disconnect() async {
     networkManager.sendPostJSONRequestWithLogin(
       uri: 'disconnect',
     );
     this._socket.disconnect();
-  }
+  }*/
 
   setChannelHandler(String channel, Function function){
     _socket.on(channel, function);

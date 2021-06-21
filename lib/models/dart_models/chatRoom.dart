@@ -1,7 +1,7 @@
 import 'package:whatsapp_clone_mobile/models/dart_models/contact.dart';
 import 'package:whatsapp_clone_mobile/models/dart_models/message.dart';
 import 'package:whatsapp_clone_mobile/services/file_manager.dart';
-import 'package:whatsapp_clone_mobile/services/network/multipart_data.dart';
+import 'package:whatsapp_clone_mobile/services/network/http_request_data.dart';
 import 'package:whatsapp_clone_mobile/services/network/network_manager.dart';
 
 
@@ -17,6 +17,7 @@ class ChatRoom {
 
   Future<bool> sendMessage(Message message) async {
     String uri = 'send-message';
+    HttpRequestData data = HttpRequestData();
     Map fields = {
       'message': message.message,
       'roomId': message.roomId,
@@ -24,28 +25,22 @@ class ChatRoom {
       'from': message.from,
       'membersPhoneNumber': membersPhoneNumber
     };
-    Map response;
+    data.addFieldsWithMap(fields);
 
     if(message.file != null){
       message.file = await fileManager.copyImageToExternalStorage(message.file, 'Whatsapp-Clone-${DateTime.now()}.jpg');
       message.fileLocation = message.file.path;
 
-      MultipartData data = MultipartData();
-      fields['haveFile'] = 'true';
-      data.addFieldsWithMap(fields);
+      data.addField(key: 'haveFile', field: 'true');
       data.addFile(
         key: 'imageFile',
         file: message.file,
         type: MultipartFileTypes.image,
         subtype: MultipartFileSubTypes.jpg,
       );
+    }
+    Map response = await networkManager.sendPostRequest(uri: uri, requestData: data);
 
-      response = await networkManager.sendPostMultipartRequestWithLogin(uri: uri, multipartData: data);
-    }
-    else {
-      response = await networkManager.sendPostJSONRequestWithLogin(body: fields, uri: uri);
-    }
-print(response);
     if(response['success']){
       message.isSent = true;
     }
@@ -58,14 +53,15 @@ print(response);
   }
 
   Future<void> sendMessagesSeenInfo() async {
-    Map response = await networkManager.sendPostJSONRequestWithLogin(
-      uri: 'send-messages-seen-info',
-      body: {
-        'seenTime': DateTime.now().toIso8601String(),
-        'roomId': id,
-        'membersPhoneNumber': membersPhoneNumber
-      }
-    );
+    Map fields = {
+      'seenTime': DateTime.now().toIso8601String(),
+      'roomId': id,
+      'membersPhoneNumber': membersPhoneNumber
+    };
+    HttpRequestData data = HttpRequestData();
+
+    data.addFieldsWithMap(fields);
+    Map response = await networkManager.sendPostRequest(uri: 'send-messages-seen-info', requestData: data);
   }
 
   void messagesSeenHandler(DateTime seenTime, String userPhoneNumber){
@@ -95,15 +91,15 @@ print(response);
   }
 
   Future<void> sendMessageReceivedInfo({String userPhoneNumber}) async {
-    Map response = await networkManager.sendPostJSONRequestWithLogin(
-        uri: 'send-messages-received-info',
-        body: {
-          'receivedTime': DateTime.now().toIso8601String(),
-          'roomId': id,
-          'messageOwnerPhoneNumber': lastMessage.from,
-          'messageReceiverPhoneNumber': userPhoneNumber
-        }
-    );
+    Map fields = {
+      'receivedTime': DateTime.now().toIso8601String(),
+      'roomId': id,
+      'messageOwnerPhoneNumber': lastMessage.from,
+      'messageReceiverPhoneNumber': userPhoneNumber
+    };
+    HttpRequestData data = HttpRequestData();
+    data.addFieldsWithMap(fields);
+    Map response = await networkManager.sendPostRequest(uri: 'send-messages-received-info', requestData: data);
   }
 
   void messagesReceivedHandler(DateTime receivedTime, String userPhoneNumber, String receiverPhoneNumber){
