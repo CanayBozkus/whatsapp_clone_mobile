@@ -27,7 +27,7 @@ class ChatRoom {
     Map response;
 
     if(message.file != null){
-      message.file = await fileManager.copyImageToExternalStorage(message.file, 'Whatsapp-Clone-${DateTime.now()}');
+      message.file = await fileManager.copyImageToExternalStorage(message.file, 'Whatsapp-Clone-${DateTime.now()}.jpg');
       message.fileLocation = message.file.path;
 
       MultipartData data = MultipartData();

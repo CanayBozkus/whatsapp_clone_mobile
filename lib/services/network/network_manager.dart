@@ -74,7 +74,7 @@ class NetworkManager {
   Future<Map> sendPostMultipartRequestWithLogin({String uri, MultipartData multipartData}) async {
     Uri parsedUri = Uri.http(Constant.serverURI, uri);
     http.MultipartRequest request = new http.MultipartRequest("POST", parsedUri);
-    multipartData.addFieldsToMultipartRequest(request);
+    await multipartData.addFieldsToMultipartRequest(request);
 
     request.headers['Authorization'] = 'Bearer $_jwt';
     try {
@@ -82,7 +82,7 @@ class NetworkManager {
       http.Response response = await http.Response.fromStream(streamedResponse);
       return jsonDecode(response.body);
     } catch (e) {
-      return {};
+      return {'success': false};
     }
   }
 

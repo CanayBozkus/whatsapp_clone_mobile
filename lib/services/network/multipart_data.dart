@@ -44,12 +44,11 @@ class MultipartData {
 
     for(Map fileData in _files){
       String key = fileData['file'].keys.first;
-      print(fileData['type']);
       request.files.add(
           await http.MultipartFile.fromPath(
               key,
               fileData['file'][key].path,
-              contentType: MediaType(fileData['type'].toString(), fileData['subType'].toString())
+              contentType: MediaType(fileData['type'].toString(), fileData['subtype'].toString())
           )
       );
     }
